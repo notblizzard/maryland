@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import PusherClient from "pusher-js";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,8 @@ import Image from "next/image";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { AiOutlineHeart } from "react-icons/ai";
 import { FaRegCommentAlt } from "react-icons/fa";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 import {
   Card,
   CardContent,
@@ -79,21 +81,26 @@ type Heart = {
 export default function Dashboard() {
   const [user, setUser] = useState<User>(null!);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [skip, setSkip] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const [post, setPost] = useState({
     image: "",
     description: "",
   });
 
-  useEffect(() => {
-    fetch("/api/dashboard")
+  const getData = useCallback(() => {
+    fetch(`/api/dashboard?skip=${skip}`)
       .then((res) => res.json())
       .then((data) => {
         setUser(data.user);
-        setPosts(data.posts);
+        setPosts(posts.concat(data.posts));
+        setSkip(skip + 1);
+        if (data.noMore) setHasMore(false);
       });
-  }, []);
+  }, [skip]);
 
   useEffect(() => {
+    getData();
     if (user && user.id) {
       const pusher = new PusherClient("ec8aeca561a2f2b96138", {
         cluster: "us2",
@@ -227,48 +234,55 @@ export default function Dashboard() {
                   </DialogContent>
                 </Dialog>
                 <p className="mb-4 p-4 text-4xl font-bold">Feed</p>
-                <ResponsiveMasonry
-                  columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
+                <InfiniteScroll
+                  dataLength={posts.length}
+                  next={getData}
+                  hasMore={hasMore}
+                  loader={<div>Loading</div>}
                 >
-                  <Masonry gutter={"1rem"} className="pr-4">
-                    {posts.map((post) => (
-                      <div key={post.id.toString()}>
-                        <Image
-                          src={`https://cdn.notblizzard.dev/maryland/uploads/${post.image}.png`}
-                          alt={post.description}
-                          width={500}
-                          height={500}
-                          className="mb-3 h-auto max-w-full cursor-pointer rounded-xl"
-                        />
-                        <div className="mb-5 flex flex-row justify-between">
-                          <div className="flex flex-row items-center">
-                            <div className="rainbow-border flex h-[50px] w-[50px] items-center justify-center rounded-full">
-                              <div className="bg-background flex h-[45px] w-[45px] items-center justify-center rounded-full">
-                                <Image
-                                  src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
-                                  alt={user.username}
-                                  width={35}
-                                  height={35}
-                                  className="cursor-pointer rounded-full"
-                                />
+                  <ResponsiveMasonry
+                    columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
+                  >
+                    <Masonry gutter={"1rem"} className="pr-4">
+                      {posts.map((post) => (
+                        <div key={post.id.toString()}>
+                          <Image
+                            src={`https://cdn.notblizzard.dev/maryland/uploads/${post.image}.png`}
+                            alt={post.description}
+                            width={500}
+                            height={500}
+                            className="mb-3 h-auto max-w-full cursor-pointer rounded-xl"
+                          />
+                          <div className="mb-5 flex flex-row justify-between">
+                            <div className="flex flex-row items-center">
+                              <div className="rainbow-border flex h-[50px] w-[50px] items-center justify-center rounded-full">
+                                <div className="bg-background flex h-[45px] w-[45px] items-center justify-center rounded-full">
+                                  <Image
+                                    src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
+                                    alt={user.username}
+                                    width={35}
+                                    height={35}
+                                    className="cursor-pointer rounded-full"
+                                  />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="flex flex-row items-center">
-                            <AiOutlineHeart className="mx-1 h-5 w-5" />
-                            <p className="text-lg font-bold">
-                              {post._count.comments}
-                            </p>
-                            <FaRegCommentAlt className="ml-4 mr-1 h-5 w-5" />
-                            <p className="text-lg font-bold">
-                              {post._count.hearts}
-                            </p>
+                            <div className="flex flex-row items-center">
+                              <AiOutlineHeart className="mx-1 h-5 w-5" />
+                              <p className="text-lg font-bold">
+                                {post._count.comments}
+                              </p>
+                              <FaRegCommentAlt className="ml-4 mr-1 h-5 w-5" />
+                              <p className="text-lg font-bold">
+                                {post._count.hearts}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </Masonry>
-                </ResponsiveMasonry>
+                      ))}
+                    </Masonry>
+                  </ResponsiveMasonry>
+                </InfiniteScroll>
               </div>
             </div>
           </div>

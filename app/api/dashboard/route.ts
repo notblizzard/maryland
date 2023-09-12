@@ -9,6 +9,8 @@ import upload from "@/upload";
 export async function GET(request: Request, response: Response) {
   const session = await getServerSession(OPTIONS);
 
+  const { searchParams } = new URL(request.url);
+  const skip = parseInt(searchParams.get("skip")!);
   if (session?.user?.email) {
     const user = await prisma.user.findFirst({
       where: { email: session.user.email },
@@ -27,7 +29,13 @@ export async function GET(request: Request, response: Response) {
           select: { hearts: true, comments: true },
         },
       },
+      skip: skip * 10,
+      take: 10,
     }); // TODO: filter by user
-    return NextResponse.json({ user, posts });
+    if (posts.length <= 9) {
+      return NextResponse.json({ user, posts, noMore: true });
+    } else {
+      return NextResponse.json({ user, posts });
+    }
   }
 }
