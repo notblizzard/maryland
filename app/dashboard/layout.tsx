@@ -7,7 +7,7 @@ import Settings from "./Settings";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -51,7 +51,14 @@ export default function RootLayout({
     image: "",
     description: "",
   });
+  const router = useRouter();
+  const [text, setText] = useState("");
   const pathname = usePathname();
+  const handleSubmit = (e) => {
+    if (e.key === "Enter") {
+      return router.push(`/dashboard/search?params=${text}`);
+    }
+  };
   useEffect(() => {
     fetch("/api/user")
       .then((res) => res.json())
@@ -171,7 +178,13 @@ export default function RootLayout({
           <div className="col-span-10 h-full w-full">
             <Dialog>
               <div className="flex w-full flex-row justify-between p-4">
-                <Input placeholder="Search" className="w-4/6" />
+                <Input
+                  placeholder="Search"
+                  className="w-4/6"
+                  value={text}
+                  onKeyDown={handleSubmit}
+                  onChange={(e) => setText(e.target.value)}
+                />
 
                 <DialogTrigger className="focus-visible:ring-ring disabled:opacity-50w-1/6 text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-end items-center justify-end justify-center rounded-md bg-gradient-to-r from-pink-500 via-red-500  to-yellow-500 px-4 py-2 text-sm font-medium shadow transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none">
                   New Image
