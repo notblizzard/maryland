@@ -25,6 +25,7 @@ export async function GET(request: Request, response: Response) {
         createdAt: "desc",
       },
       include: {
+        hearts: true,
         _count: {
           select: { hearts: true, comments: true },
         },
@@ -32,6 +33,9 @@ export async function GET(request: Request, response: Response) {
       skip: skip * 10,
       take: 10,
     }); // TODO: filter by user
+    posts.map((post) => {
+      post.hearted = post.hearts.some((heart) => heart.userId === user!.id);
+    });
     if (posts.length <= 9) {
       return NextResponse.json({ user, posts, noMore: true });
     } else {
