@@ -132,10 +132,20 @@ export default function RootLayout({
                 >
                   Notifications
                 </Link>
+                <Link
+                  href="/dashboard/directs"
+                  className={`${
+                    pathname === "/dashboard/directs"
+                      ? "text-rose-400"
+                      : "text-slate-400"
+                  }`}
+                >
+                  Directs
+                </Link>
               </div>
             </div>
           </div>
-          <div className="col-span-10 h-screen w-full">
+          <div className="col-span-10 h-full w-full">
             <Dialog>
               <DialogTrigger className="focus-visible:ring-ring disabled:opacity-50w-1/6 text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-end items-center justify-end justify-center rounded-md bg-gradient-to-r from-pink-500 via-red-500  to-yellow-500 px-4 py-2 text-sm font-medium shadow transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none">
                 New Image
