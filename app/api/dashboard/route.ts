@@ -25,6 +25,7 @@ export async function GET(request: Request, response: Response) {
         createdAt: "desc",
       },
       include: {
+        user: true,
         hearts: true,
         _count: {
           select: { hearts: true, comments: true },
