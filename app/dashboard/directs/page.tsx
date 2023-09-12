@@ -176,24 +176,13 @@ export default function MessagesPage() {
             >
               <TabsList className=" mt-4 flex min-h-full w-2/6 flex-col justify-start bg-transparent">
                 <div className="flex w-full flex-row justify-between px-3">
-                  <div className="flex flex-row items-center">
-                    <Image
-                      src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
-                      alt="Avatar"
-                      className="mx-4 rounded-full"
-                      height={35}
-                      width={35}
-                    />
-                    <p className="text-xl text-black">Chat</p>
-                  </div>
-
-                  <div className="flex flex-row items-center">
+                  <div className="flex w-full flex-row items-center">
                     <Dialog
                       open={isNewDirectOpen}
                       onOpenChange={handleDirectOpen}
                     >
-                      <DialogTrigger>
-                        <FaSquarePen className="h-9 w-9 text-black" />
+                      <DialogTrigger className="w-full p-4">
+                        <Button className="w-full p-4">New Direct</Button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
@@ -233,7 +222,7 @@ export default function MessagesPage() {
 
                 {user.directs.map((direct) => (
                   <div
-                    className="flex max-h-[80vh] w-full flex-col "
+                    className="flex max-h-[80vh] w-full flex-col"
                     key={direct.id}
                   >
                     <TabsTrigger

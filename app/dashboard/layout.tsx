@@ -11,7 +11,12 @@ import { usePathname } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-
+import { FaPaperPlane } from "react-icons/fa";
+import {
+  HiMiniSquares2X2,
+  HiMagnifyingGlass,
+  HiMiniBell,
+} from "react-icons/hi2";
 import {
   Dialog,
   DialogContent,
@@ -20,6 +25,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 const inter = Inter({ subsets: ["latin"] });
 
 type User = {
@@ -67,7 +73,7 @@ export default function RootLayout({
     <>
       {user && (
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-2 h-screen bg-slate-100">
+          <div className="sticky left-0 col-span-2 h-screen bg-slate-100">
             <div className="flex flex-col">
               <div className="flex flex-row  p-4">
                 <Settings user={user} setUser={setUser} />
@@ -102,64 +108,88 @@ export default function RootLayout({
                     <p className="text-xs text-gray-400">Following</p>
                   </div>
                 </div>
-                <Link
-                  href="/dashboard/posts"
-                  className={`${
-                    pathname === "/dashboard/posts"
-                      ? "text-rose-400"
-                      : "text-slate-400"
-                  }`}
-                >
-                  Posts
-                </Link>
-                <Link
-                  href="/dashboard/explore"
-                  className={`${
-                    pathname === "/dashboard/explore"
-                      ? "text-rose-400"
-                      : "text-slate-400"
-                  }`}
-                >
-                  Explore
-                </Link>
-                <Link
-                  href="/dashboard/notifications"
-                  className={`${
-                    pathname === "/dashboard/notifications"
-                      ? "text-rose-400"
-                      : "text-slate-400"
-                  }`}
-                >
-                  Notifications
-                </Link>
-                <Link
-                  href="/dashboard/directs"
-                  className={`${
-                    pathname === "/dashboard/directs"
-                      ? "text-rose-400"
-                      : "text-slate-400"
-                  }`}
-                >
-                  Directs
-                </Link>
+
+                <div className="flex flex-col justify-center">
+                  <div className="mt-10">
+                    <Link
+                      href="/dashboard/feed"
+                      className={`flex flex-row ${
+                        pathname === "/dashboard/feed"
+                          ? "text-rose-400"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      <HiMiniSquares2X2 className="h-7 w-7" />
+                      <p className="text-lg">Feed</p>
+                    </Link>
+                  </div>
+
+                  <div className="mt-10">
+                    <Link
+                      href="/dashboard/explore"
+                      className={`flex flex-row ${
+                        pathname === "/dashboard/explore"
+                          ? "text-rose-400"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      <HiMagnifyingGlass className="h-7 w-7" />
+                      <p className="text-lg">Explore</p>
+                    </Link>
+                  </div>
+
+                  <div className="mt-10">
+                    <Link
+                      href="/dashboard/notifications"
+                      className={`flex flex-row ${
+                        pathname === "/dashboard/notifications"
+                          ? "text-rose-400"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      <HiMiniBell className="h-7 w-7" />
+                      <p className="text-lg">Notifications</p>
+                    </Link>
+                  </div>
+                  <div className="mt-10">
+                    <Link
+                      href="/dashboard/directs"
+                      className={`flex flex-row ${
+                        pathname === "/dashboard/notifications"
+                          ? "text-rose-400"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      <FaPaperPlane className="h-7 w-7" />
+                      <p className="text-lg">Directs</p>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           <div className="col-span-10 h-full w-full">
             <Dialog>
-              <DialogTrigger className="focus-visible:ring-ring disabled:opacity-50w-1/6 text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-end items-center justify-end justify-center rounded-md bg-gradient-to-r from-pink-500 via-red-500  to-yellow-500 px-4 py-2 text-sm font-medium shadow transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none">
-                New Image
-              </DialogTrigger>
+              <div className="flex w-full flex-row justify-between p-4">
+                <Input placeholder="Search" className="w-4/6" />
+
+                <DialogTrigger className="focus-visible:ring-ring disabled:opacity-50w-1/6 text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-end items-center justify-end justify-center rounded-md bg-gradient-to-r from-pink-500 via-red-500  to-yellow-500 px-4 py-2 text-sm font-medium shadow transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none">
+                  New Image
+                </DialogTrigger>
+              </div>
+
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>New Image</DialogTitle>
                   <DialogDescription className="flex flex-col justify-center">
                     Upload a new image to Maryland
-                    <input
+                    <Label htmlFor="image" className="mb-1 mt-4">
+                      Select Image
+                    </Label>
+                    <Input
                       type="file"
                       name="image"
                       id="image"
-                      className="hidden"
                       //value={post.image as string}
                       onChange={(e) => {
                         if (!e.target.files) return;
@@ -170,18 +200,10 @@ export default function RootLayout({
                         });
                       }}
                     />
-                    <label htmlFor="image">
-                      <Button
-                        className="w-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500"
-                        onClick={() =>
-                          document.getElementById("image")?.click()
-                        }
-                      >
-                        Select Image
-                      </Button>
-                    </label>
                     <div className="flex w-full flex-col">
-                      <Label htmlFor="description">Description</Label>
+                      <Label htmlFor="description" className="mb-1 mt-4">
+                        Description
+                      </Label>
                       <Textarea
                         name="description"
                         id="description"

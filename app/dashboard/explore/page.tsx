@@ -32,7 +32,6 @@ type Post = {
 };
 
 export default function Explore() {
-  const [user, setUser] = useState<User>(null!);
   const [posts, setPosts] = useState<Post[]>([]);
   const [skip, setSkip] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -41,7 +40,6 @@ export default function Explore() {
     fetch(`/api/explore?skip=${skip}`)
       .then((res) => res.json())
       .then((data) => {
-        setUser(data.user);
         setPosts(posts.concat(data.posts));
         setSkip(skip + 1);
         if (data.noMore) setHasMore(false);

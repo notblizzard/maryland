@@ -2,7 +2,15 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaRegCommentAlt } from "react-icons/fa";
 import Image from "next/image";
 import { useState } from "react";
+import Link from "next/link";
 
+type Comment = {
+  id: number;
+  user: User;
+  post: Post;
+  text: string;
+  createdAt: Date;
+};
 type User = {
   id: number;
   username: string;
@@ -28,10 +36,20 @@ type Post = {
     hearts: number;
   };
   hearted: boolean;
+  comments?: Comment;
 };
 
-export default function PostCard({ data, key }: { data: Post; key: string }) {
+export default function PostCard({
+  data,
+  key,
+  dimension,
+}: {
+  data: Post;
+  key: string;
+  dimension?: number;
+}) {
   const [post, setPost] = useState<Post>(data);
+  const [imageWidth, setImageWidth] = useState<number>(0);
   const toggleHeart = (post: Post) => {
     fetch(`/api/heart/`, {
       body: JSON.stringify({ id: post.id }),
@@ -52,45 +70,49 @@ export default function PostCard({ data, key }: { data: Post; key: string }) {
 
   return (
     <div key={key}>
-      <Image
-        src={`https://cdn.notblizzard.dev/maryland/uploads/${post.image}.png`}
-        alt={post.id.toString()}
-        width={500}
-        height={500}
-        className="mb-3 h-auto max-w-full cursor-pointer rounded-xl"
-      />
-      <div className="mb-5 flex flex-row justify-between">
-        <div className="flex flex-row items-center">
-          <div className="rainbow-border flex h-[50px] w-[50px] items-center justify-center rounded-full">
-            <div className="bg-background flex h-[45px] w-[45px] items-center justify-center rounded-full">
-              <Image
-                src={`https://cdn.notblizzard.dev/maryland/avatars/${post.user.avatar}.png`}
-                alt={post.user.username}
-                width={35}
-                height={35}
-                className="cursor-pointer rounded-full"
-              />
+      <Link href={`/dashboard/post/${post.id}`}>
+        <Image
+          src={`https://cdn.notblizzard.dev/maryland/uploads/${post.image}.png`}
+          alt={post.id.toString()}
+          width={dimension || 500}
+          height={dimension || 500}
+          className="mb-3 h-auto  cursor-pointer rounded-xl"
+        />
+        <div className="mb-5 flex flex-row  items-center justify-between">
+          <div className="flex flex-row items-center">
+            <div className="rainbow-border flex h-[50px] w-[50px] items-center justify-center rounded-full">
+              <div className="bg-background flex h-[45px] w-[45px] items-center justify-center rounded-full">
+                <Link href={`/dashboard/@${post.user.username}`}>
+                  <Image
+                    src={`https://cdn.notblizzard.dev/maryland/avatars/${post.user.avatar}.png`}
+                    alt={post.user.username}
+                    width={35}
+                    height={35}
+                    className="cursor-pointer rounded-full"
+                  />
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex flex-row items-center">
-          {post.hearted ? (
-            <AiFillHeart
-              className={`mx-1 h-5 w-5 text-rose-400`}
-              onClick={() => toggleHeart(post)}
-            />
-          ) : (
-            <AiOutlineHeart
-              className={`mx-1 h-5 w-5`}
-              onClick={() => toggleHeart(post)}
-            />
-          )}
+          <div className={`flex flex-row`}>
+            {post.hearted ? (
+              <AiFillHeart
+                className={`mx-1 h-5 w-5 text-rose-400`}
+                onClick={() => toggleHeart(post)}
+              />
+            ) : (
+              <AiOutlineHeart
+                className={`mx-1 h-5 w-5`}
+                onClick={() => toggleHeart(post)}
+              />
+            )}
 
-          <p className="text-lg font-bold">{post._count.hearts}</p>
-          <FaRegCommentAlt className="ml-4 mr-1 h-5 w-5" />
-          <p className="text-lg font-bold">{post._count.comments}</p>
+            <p className="text-lg font-bold">{post._count.hearts}</p>
+            <FaRegCommentAlt className="ml-4 mr-1 h-5 w-5" />
+            <p className="text-lg font-bold">{post._count.comments}</p>
+          </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 }

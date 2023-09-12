@@ -6,6 +6,23 @@ import { zfd } from "zod-form-data";
 import upload from "@/upload";
 import { PusherServer } from "@/pusher";
 
+export async function GET(request: Request, response: Response) {
+  const { searchParams } = new URL(request.url);
+  const id = parseInt(searchParams.get("id")!);
+  const post = await prisma.post.findFirst({
+    where: { id },
+    include: {
+      user: true,
+      comments: true,
+      _count: {
+        select: { hearts: true, comments: true },
+      },
+    },
+  });
+  if (post) {
+    return NextResponse.json({ post });
+  }
+}
 export async function POST(request: Request, response: Response) {
   const session = await getServerSession(OPTIONS);
   console.log("a");
