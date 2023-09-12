@@ -24,6 +24,11 @@ type User = {
   email: string;
   description: string;
   avatar: string;
+  _count: {
+    posts: number;
+    following: number;
+    followers: number;
+  };
 };
 
 export default function Settings({

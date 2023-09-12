@@ -12,6 +12,11 @@ export async function GET(request: Request, response: Response) {
   if (session?.user?.email) {
     const user = await prisma.user.findFirst({
       where: { email: session.user.email },
+      include: {
+        _count: {
+          select: { posts: true, followers: true, following: true },
+        },
+      },
     });
     const posts = await prisma.post.findMany({
       orderBy: {

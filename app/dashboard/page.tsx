@@ -45,6 +45,11 @@ type User = {
   description: string;
   displayname: string;
   avatar: string;
+  _count: {
+    posts: number;
+    following: number;
+    followers: number;
+  };
 };
 
 type Post = {
@@ -84,7 +89,6 @@ export default function Dashboard() {
       .then((res) => res.json())
       .then((data) => {
         setUser(data.user);
-        console.log(data.posts);
         setPosts(data.posts);
       });
   }, []);
@@ -141,6 +145,20 @@ export default function Dashboard() {
                 </div>
                 <p className="mt-4 text-xl font-bold">{user.displayname}</p>
                 <p className="mt-1 text-sm  text-gray-400">@{user.username}</p>
+                <div className="flex flex-row items-center justify-around gap-4">
+                  <div className="mr-2 flex w-full flex-col items-center">
+                    <p className="text-xl font-bold">{user._count.posts}</p>
+                    <p className="text-xs text-gray-400">Posts</p>
+                  </div>
+                  <div className="flex w-full flex-col items-center">
+                    <p className="text-xl font-bold">{user._count.followers}</p>
+                    <p className="text-xs text-gray-400">Followers</p>
+                  </div>
+                  <div className="flex w-full flex-col items-center">
+                    <p className="text-xl font-bold">{user._count.following}</p>
+                    <p className="text-xs text-gray-400">Following</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
