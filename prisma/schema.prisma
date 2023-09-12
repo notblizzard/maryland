@@ -11,28 +11,30 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  displayname String    @default("")
-  username    String
-  email       String    @unique
-  description String
-  avatar      String    @default("")
-  posts       Post[]
-  hearts      Heart[]
-  comments    Comment[]
-  followers   Follow[]  @relation(name: "FollowingUser")
-  following   Follow[]  @relation(name: "FollowerUser")
+  id            Int            @id @default(autoincrement())
+  displayname   String         @default("")
+  username      String
+  email         String         @unique
+  description   String
+  avatar        String         @default("")
+  posts         Post[]
+  hearts        Heart[]
+  comments      Comment[]
+  followers     Follow[]       @relation(name: "FollowingUser")
+  following     Follow[]       @relation(name: "FollowerUser")
+  notifications Notification[]
 }
 
 model Post {
-  id          Int       @id @default(autoincrement())
-  user        User      @relation(fields: [userId], references: [id])
-  createdAt   DateTime  @default(now())
-  userId      Int
-  description String?
-  image       String
-  hearts      Heart[]
-  comments    Comment[]
+  id           Int            @id @default(autoincrement())
+  user         User           @relation(fields: [userId], references: [id])
+  createdAt    DateTime       @default(now())
+  userId       Int
+  description  String?
+  image        String
+  hearts       Heart[]
+  comments     Comment[]
+  notifications Notification[]
 }
 
 model Heart {
@@ -45,13 +47,14 @@ model Heart {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  post      Post     @relation(fields: [postId], references: [id])
-  userId    Int
-  postId    Int
-  text      String
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  user         User           @relation(fields: [userId], references: [id])
+  post         Post           @relation(fields: [postId], references: [id])
+  userId       Int
+  postId       Int
+  text         String
+  notifications Notification[]
 }
 
 model Follow {
@@ -60,4 +63,17 @@ model Follow {
   followerId  Int
   following   User @relation(fields: [followingId], references: [id], name: "FollowingUser")
   followingId Int
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  type      String
+  read      Boolean  @default(false)
+  postId    Int?
+  commentId Int?
+  post      Post?    @relation(fields: [postId], references: [id])
+  comment   Comment? @relation(fields: [commentId], references: [id])
 }

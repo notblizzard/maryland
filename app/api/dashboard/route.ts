@@ -21,6 +21,12 @@ export async function GET(request: Request, response: Response) {
       },
     });
     const posts = await prisma.post.findMany({
+      where: {
+        OR: [
+          { user: { followers: { some: { followerId: user!.id } } } },
+          { userId: user!.id },
+        ],
+      },
       orderBy: {
         createdAt: "desc",
       },
