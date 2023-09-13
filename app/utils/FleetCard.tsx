@@ -64,6 +64,24 @@ export default function FleetCard({
             height={1000}
             className=" cursor-pointer rounded-xl"
           />
+          <div className="flex flex-row items-center">
+            <div className="rainbow-border flex h-[50px] w-[50px] items-center justify-center rounded-full">
+              <div className="bg-background flex h-[45px] w-[45px] items-center justify-center rounded-full">
+                <Link href={`/dashboard/@${fleet.user.username}`}>
+                  <Image
+                    src={`https://cdn.notblizzard.dev/maryland/avatars/${fleet.user.avatar}.png`}
+                    alt={fleet.user.username}
+                    width={35}
+                    height={35}
+                    className="cursor-pointer rounded-full"
+                  />
+                </Link>
+              </div>
+            </div>
+            <Link href={`/dashboard/@${fleet.user.username}`}>
+              <p className="font-bold text-black">{fleet.user.username}</p>
+            </Link>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
