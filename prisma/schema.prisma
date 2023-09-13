@@ -25,6 +25,7 @@ model User {
   notifications Notification[]
   directs       Direct[]
   messages      Message[]
+  fleets Fleet[]
 }
 
 model Post {
@@ -37,6 +38,14 @@ model Post {
   hearts        Heart[]
   comments      Comment[]
   notifications Notification[]
+}
+
+model Fleet {
+  id            Int            @id @default(autoincrement())
+  user          User           @relation(fields: [userId], references: [id])
+  createdAt     DateTime       @default(now())
+  userId        Int
+  image         String
 }
 
 model Heart {

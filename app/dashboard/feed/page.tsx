@@ -24,6 +24,7 @@ import Settings from "../Settings";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import PostCard from "@/app/utils/PostCard";
+import FleetCard from "@/app/utils/FleetCard";
 
 type User = {
   id: number;
@@ -52,6 +53,12 @@ type Post = {
   hearted: boolean;
 };
 
+type Fleet = {
+  id: number;
+  user: User;
+  image: string;
+};
+
 type Comment = {
   user: User;
   post: Post;
@@ -68,6 +75,7 @@ type Heart = {
 export default function Dashboard() {
   const [user, setUser] = useState<User>(null!);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [fleets, setFleets] = useState<Fleet[]>([]);
   const [skip, setSkip] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [post, setPost] = useState({
@@ -81,6 +89,7 @@ export default function Dashboard() {
       .then((data) => {
         setUser(data.user);
         setPosts(posts.concat(data.posts));
+        setFleets(data.fleets);
         setSkip(skip + 1);
         if (data.noMore) setHasMore(false);
       });
@@ -94,8 +103,11 @@ export default function Dashboard() {
       });
       const channel = pusher.subscribe(`maryland-${user.id}`);
       channel.bind("new-post", (post: Post) => {
-        console.log(post);
         setPosts([post].concat(posts));
+      });
+
+      channel.bind("new-fleet", (fleet: Fleet) => {
+        setFleets([fleet].concat(fleets));
       });
 
       return () => {
@@ -108,9 +120,19 @@ export default function Dashboard() {
     <>
       {user && (
         <div className="grid h-screen grid-rows-6 gap-4">
-          <div className="row-span-1"></div>
+          <div className="row-span-1">
+            <p className="mb-1  text-4xl font-bold">Fleets</p>
+
+            {fleets && (
+              <div className="flex w-full overflow-auto">
+                {fleets.map((fleet) => (
+                  <FleetCard data={fleet} key={fleet.id.toString()} />
+                ))}
+              </div>
+            )}
+          </div>
           <div className="row-span-5">
-            <p className="mb-4 p-4 text-4xl font-bold">Feed</p>
+            <p className="mb-4 mt-10 text-4xl font-bold">Feed</p>
             <InfiniteScroll
               dataLength={posts.length}
               next={getData}

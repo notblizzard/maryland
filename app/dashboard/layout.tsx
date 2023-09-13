@@ -75,6 +75,15 @@ export default function RootLayout({
     });
   };
 
+  const handleNewFleetSubmit = () => {
+    const form = new FormData();
+    if (post.image) form.append("image", post.image);
+    fetch("/api/fleet", {
+      method: "POST",
+      body: form,
+    });
+  };
+
   const [user, setUser] = useState<User>(null!);
   return (
     <>
@@ -234,6 +243,12 @@ export default function RootLayout({
                         className="mt-4 w-full bg-emerald-300 hover:bg-emerald-300/80"
                       >
                         Submit
+                      </Button>
+                      <Button
+                        onClick={handleNewFleetSubmit}
+                        className="mt-4 w-full bg-emerald-300 hover:bg-emerald-300/80"
+                      >
+                        Submit as Fleet
                       </Button>
                     </div>
                   </DialogDescription>
