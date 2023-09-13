@@ -107,7 +107,6 @@ export default function MessagesPage() {
         });
       });
       channel.bind("direct", (direct: Direct) => {
-        console.log("new direct!");
         setUser({
           ...user,
           directs: [direct].concat(user.directs),
@@ -155,7 +154,6 @@ export default function MessagesPage() {
       fetch("/api/direct")
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           setUser(data.user);
         });
     } else {

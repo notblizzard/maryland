@@ -93,7 +93,6 @@ export async function POST(request: Request, response: Response) {
           },
         });
         direct.members.forEach((member) => {
-          console.log(member);
           PusherServer.trigger(`direct-${member.id}`, "direct", direct);
         });
 

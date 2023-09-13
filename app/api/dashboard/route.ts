@@ -2,8 +2,7 @@ import { getServerSession } from "next-auth";
 import { OPTIONS } from "../auth/[...nextauth]/route";
 import prisma from "@/prisma";
 import { NextResponse } from "next/server";
-import { z } from "zod";
-import { zfd } from "zod-form-data";
+
 import upload from "@/upload";
 import dayjs from "dayjs";
 

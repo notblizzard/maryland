@@ -48,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [post, setPost] = useState({
-    image: "",
+    image: "" as File | string,
     description: "",
   });
   const router = useRouter();
@@ -215,7 +215,6 @@ export default function RootLayout({
                       //value={post.image as string}
                       onChange={(e) => {
                         if (!e.target.files) return;
-                        console.log(e.target.files);
                         setPost({
                           ...post,
                           image: e.target.files[0],
