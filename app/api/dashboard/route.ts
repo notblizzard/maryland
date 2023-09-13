@@ -65,7 +65,7 @@ export async function GET(request: Request, response: Response) {
       take: 10,
     }); // TODO: filter by user
     posts.map((post) => {
-      post.hearted = post.hearts.some((heart) => heart.userId === user!.id);
+      post["hearted"] = post.hearts.some((heart) => heart.userId === user!.id);
     });
     if (posts.length <= 9) {
       return NextResponse.json({ user, posts, fleets, noMore: true });

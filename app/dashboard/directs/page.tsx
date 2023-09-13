@@ -199,7 +199,9 @@ export default function MessagesPage() {
                                       key={username}
                                       className="rounded-none"
                                       onClick={(e) =>
-                                        setDirect(e.target.innerHTML)
+                                        setDirect(
+                                          (e.target as HTMLElement).innerHTML,
+                                        )
                                       }
                                     >
                                       {username}

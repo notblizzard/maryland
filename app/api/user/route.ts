@@ -21,14 +21,12 @@ export async function GET(request: Request, response: Response) {
 
 export async function POST(request: Request, response: Response) {
   const session = await getServerSession(OPTIONS);
-  const { username, description, avatar, displayname } = res.data;
   if (session?.user?.email) {
     const data = await request.formData();
     const avatar = data.get("avatar") as string;
     const username = data.get("username") as string;
     const description = data.get("description") as string;
     const displayname = data.get("displayname") as string;
-
     if (avatar) {
       const buffer = Buffer.from(
         avatar.replace(/^data:image\/\w+;base64,/, ""),
