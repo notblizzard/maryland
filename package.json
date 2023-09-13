@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 6083",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 6083",
     "lint": "next lint"
   },
   "dependencies": {
@@ -53,6 +53,7 @@
     "zod-form-data": "^2.0.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.37.1",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "prisma": "^5.2.0"

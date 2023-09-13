@@ -98,7 +98,7 @@ export default function Dashboard() {
   useEffect(() => {
     getData();
     if (user && user.id) {
-      const pusher = new PusherClient("ec8aeca561a2f2b96138", {
+      const pusher = new PusherClient(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
         cluster: "us2",
       });
       const channel = pusher.subscribe(`maryland-${user.id}`);
