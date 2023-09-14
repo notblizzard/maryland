@@ -54,7 +54,8 @@ export default function RootLayout({
   const router = useRouter();
   const [text, setText] = useState("");
   const pathname = usePathname();
-  const handleSubmit = (e) => {
+
+  const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       return router.push(`/dashboard/search?params=${text}`);
     }
@@ -195,7 +196,7 @@ export default function RootLayout({
                   onChange={(e) => setText(e.target.value)}
                 />
 
-                <DialogTrigger className="focus-visible:ring-ring disabled:opacity-50w-1/6 text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-end items-center justify-end justify-center rounded-md bg-gradient-to-r from-pink-500 via-red-500  to-yellow-500 px-4 py-2 text-sm font-medium shadow transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none">
+                <DialogTrigger className="disabled:opacity-50w-1/6 inline-flex h-9 items-end items-center justify-end justify-center rounded-md bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 px-4 py-2  text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none">
                   New Image
                 </DialogTrigger>
               </div>

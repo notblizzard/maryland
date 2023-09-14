@@ -81,7 +81,7 @@ export default function MessagesPage() {
   const [message, setMessage] = useState<string>("");
   const [direct, setDirect] = useState<string>("");
   const router = useRouter();
-  const messageEndRef = useRef(null);
+  const messageEndRef = useRef<ReactCropperElement>(null);
   const [isNewDirectOpen, setIsNewDirectOpen] = useState(false);
   const [usernames, setUsernames] = useState<string[]>([]);
 
@@ -136,9 +136,9 @@ export default function MessagesPage() {
     }).then(() => setDirect(""));
   };
 
-  const handleMessageSubmit = (e) => {
+  const handleMessageSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode !== 13) return;
-    const id = e.target.getAttribute("data-id");
+    const id = e.currentTarget.getAttribute("data-id");
     fetch("/api/message", {
       method: "POST",
       body: JSON.stringify({ message, id }),

@@ -3,6 +3,7 @@ import { OPTIONS } from "../auth/[...nextauth]/route";
 import prisma from "@/prisma";
 import { NextResponse } from "next/server";
 import upload from "@/upload";
+import { zfd } from "zod-form-data";
 
 export async function GET(request: Request, response: Response) {
   const session = await getServerSession(OPTIONS);
@@ -19,15 +20,25 @@ export async function GET(request: Request, response: Response) {
   }
 }
 
-export async function POST(request: Request, response: Response) {
+export async function POST(request: Request) {
+  const schema = zfd.formData({
+    avatar: zfd.text().optional(),
+    username: zfd.text(),
+    description: zfd.text(),
+    displayname: zfd.text(),
+  });
+
+  const response = schema.safeParse(request.body);
+  if (!response.success) {
+    return NextResponse.json({ error: response.error });
+  }
+
+  const { username, description, displayname } = response.data;
+
   const session = await getServerSession(OPTIONS);
   if (session?.user?.email) {
-    const data = await request.formData();
-    const avatar = data.get("avatar") as string;
-    const username = data.get("username") as string;
-    const description = data.get("description") as string;
-    const displayname = data.get("displayname") as string;
-    if (avatar) {
+    if (response.data.avatar) {
+      const { avatar } = response.data;
       const buffer = Buffer.from(
         avatar.replace(/^data:image\/\w+;base64,/, ""),
         "base64",
@@ -41,7 +52,7 @@ export async function POST(request: Request, response: Response) {
     } else {
       const user = await prisma.user.update({
         where: { email: session.user.email },
-        data: { username, description, displayname, avatar },
+        data: { username, description, displayname },
       });
       return NextResponse.json({ user });
     }

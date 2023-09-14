@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/prisma";
 import upload from "@/upload";
 import { PusherServer } from "@/pusher";
-
+import { z } from "zod";
 export async function GET(request: Request, response: Response) {
   const session = await getServerSession(OPTIONS);
 
@@ -31,8 +31,19 @@ export async function GET(request: Request, response: Response) {
   }
 }
 
-export async function POST(request: Request, response: Response) {
+export async function POST(request: Request) {
   const session = await getServerSession(OPTIONS);
+
+  const schema = z.object({
+    username: z.string(),
+  });
+
+  const response = schema.safeParse(request.body);
+  if (!response.success) {
+    return NextResponse.json({ error: response.error });
+  }
+
+  const { username } = response.data;
 
   if (session?.user?.email) {
     const email = session.user.email;
@@ -40,8 +51,6 @@ export async function POST(request: Request, response: Response) {
     const user = await prisma.user.findFirst({
       where: { email },
     });
-
-    const { username } = await request.json();
 
     const otherUser = await prisma.user.findFirst({
       where: { username },

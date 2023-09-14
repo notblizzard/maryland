@@ -4,6 +4,7 @@ import prisma from "@/prisma";
 import { NextResponse } from "next/server";
 import upload from "@/upload";
 import { PusherServer } from "@/pusher";
+import { zfd } from "zod-form-data";
 
 export async function GET(request: Request, response: Response) {
   const { searchParams } = new URL(request.url);
@@ -22,12 +23,21 @@ export async function GET(request: Request, response: Response) {
     return NextResponse.json({ post });
   }
 }
-export async function POST(request: Request, response: Response) {
+export async function POST(request: Request) {
+  const schema = zfd.formData({
+    image: zfd.file(),
+    description: zfd.text(),
+  });
+
+  const response = schema.safeParse(request.body);
+  if (!response.success) {
+    return NextResponse.json({ error: response.error });
+  }
+
+  const { image, description } = response.data;
+
   const session = await getServerSession(OPTIONS);
   if (session?.user?.email) {
-    const data = await request.formData();
-    const image = data.get("image");
-    const description = data.get("description") as string;
     const buffer = Buffer.from(await (image as Blob).arrayBuffer());
     const uuid = await upload(buffer, "uploads");
     const user = await prisma.user.findFirst({

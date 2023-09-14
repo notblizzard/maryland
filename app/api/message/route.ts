@@ -5,13 +5,23 @@ import { NextResponse } from "next/server";
 import prisma from "@/prisma";
 import upload from "@/upload";
 import { PusherServer } from "@/pusher";
+import { z } from "zod";
 
-export async function POST(request: Request, response: Response) {
+export async function POST(request: Request) {
   const session = await getServerSession(OPTIONS);
 
+  const schema = z.object({
+    message: z.string(),
+    id: z.string(),
+  });
+
+  const response = schema.safeParse(request.body);
+  if (!response.success) {
+    return NextResponse.json({ error: response.error });
+  }
+  const { message, id } = response.data;
   if (session?.user?.email) {
     const email = session.user.email;
-    const { message, id } = await request.json();
 
     const user = await prisma.user.findFirst({
       where: { email },

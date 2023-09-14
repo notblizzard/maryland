@@ -2,8 +2,6 @@ import { getServerSession } from "next-auth";
 import { OPTIONS } from "../auth/[...nextauth]/route";
 import prisma from "@/prisma";
 import { NextResponse } from "next/server";
-
-import upload from "@/upload";
 import dayjs from "dayjs";
 
 export async function GET(request: Request, response: Response) {
@@ -64,8 +62,11 @@ export async function GET(request: Request, response: Response) {
       skip: skip * 10,
       take: 10,
     }); // TODO: filter by user
+    type PostHeart = (typeof posts)[0] & { hearted: boolean };
     posts.map((post) => {
-      post["hearted"] = post.hearts.some((heart) => heart.userId === user!.id);
+      (post as PostHeart).hearted = post.hearts.some(
+        (heart) => heart.userId === user!.id,
+      );
     });
     if (posts.length <= 9) {
       return NextResponse.json({ user, posts, fleets, noMore: true });

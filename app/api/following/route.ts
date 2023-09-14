@@ -3,7 +3,8 @@ import { OPTIONS } from "../auth/[...nextauth]/route";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import prisma from "@/prisma";
-import upload from "@/upload";
+import { z } from "zod";
+
 export async function GET(request: Request, response: Response) {
   const session = await getServerSession(OPTIONS);
   const { searchParams } = new URL(request.url);
@@ -29,15 +30,24 @@ export async function GET(request: Request, response: Response) {
   }
 }
 
-export async function POST(request: Request, response: Response) {
+export async function POST(request: Request) {
+  const schema = z.object({
+    id: z.string(),
+  });
+
+  const response = schema.safeParse(request.body);
+  if (!response.success) {
+    return NextResponse.json({ error: response.error });
+  }
+
+  const { id } = response.data;
   const session = await getServerSession(OPTIONS);
-  const data = await request.json();
   if (session?.user?.email) {
     const user = await prisma.user.findFirst({
       where: { email: session.user.email },
     });
     const otherUser = await prisma.user.findFirst({
-      where: { id: data.id },
+      where: { id: parseInt(id) },
     });
     if (user && otherUser) {
       const follow = await prisma.follow.findFirst({

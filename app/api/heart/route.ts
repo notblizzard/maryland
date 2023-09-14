@@ -2,14 +2,24 @@ import { getServerSession } from "next-auth";
 import { OPTIONS } from "../auth/[...nextauth]/route";
 import prisma from "@/prisma";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
-export async function POST(request: Request, resposne: Response) {
+export async function POST(request: Request) {
+  const schema = z.object({
+    id: z.string(),
+  });
+
+  const response = schema.safeParse(request.body);
+  if (!response.success) {
+    return NextResponse.json({ error: response.error });
+  }
+
+  const { id } = response.data;
   const session = await getServerSession(OPTIONS);
 
   if (session?.user?.email) {
-    const data = await request.json();
     const post = await prisma.post.findFirst({
-      where: { id: data.id },
+      where: { id: parseInt(id) },
       include: { user: true },
     });
     const user = await prisma.user.findFirst({
