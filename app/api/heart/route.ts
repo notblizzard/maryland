@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     id: z.string(),
   });
 
-  const response = schema.safeParse(request.body);
+  const response = schema.safeParse(await request.json());
   if (!response.success) {
     return NextResponse.json({ error: response.error });
   }

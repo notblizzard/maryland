@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     description: zfd.text(),
   });
 
-  const response = schema.safeParse(request.body);
+  const response = schema.safeParse(await request.formData());
   if (!response.success) {
     return NextResponse.json({ error: response.error });
   }
