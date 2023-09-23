@@ -110,7 +110,12 @@ export default function RootLayout({
                   </div>
                 </div>
                 <p className="mt-4 text-xl font-bold">{user.displayname}</p>
-                <p className="mt-1 text-sm  text-gray-400">@{user.username}</p>
+                <Link
+                  href={`/dashboard/profile/${user.username}`}
+                  className="mt-1 text-sm  text-gray-400"
+                >
+                  @{user.username}
+                </Link>
                 <div className="flex flex-row items-center justify-around gap-4">
                   <div className="mr-2 flex w-full flex-col items-center">
                     <p className="text-xl font-bold">{user._count.posts}</p>

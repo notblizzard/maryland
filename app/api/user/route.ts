@@ -47,8 +47,13 @@ export async function POST(request: Request) {
       const user = await prisma.user.update({
         where: { email: session.user.email },
         data: { username, description, displayname, avatar: uuid },
+        include: {
+          _count: {
+            select: { posts: true, followers: true, following: true },
+          },
+        },
       });
-      return NextResponse.json(user);
+      return NextResponse.json({ user });
     } else {
       const user = await prisma.user.update({
         where: { email: session.user.email },

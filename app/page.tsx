@@ -21,7 +21,7 @@ export default function Home() {
           Maryland
         </p>
         <Button
-          onClick={() => signIn()}
+          onClick={() => signIn(undefined, { callbackUrl: "/dashboard/feed" })}
           className="rounded-none transition-all ease-in-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[5px_5px_0px_0px_rgba(52,211,153,1)]"
         >
           Get Started!

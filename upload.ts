@@ -10,7 +10,7 @@ export default async function upload(image: Buffer, folder: string) {
     Body: image,
     ACL: "public-read",
   };
-  const data = await s3Client.send(new PutObjectCommand(bucketParams));
+  await s3Client.send(new PutObjectCommand(bucketParams));
 
   return uuid;
 }
