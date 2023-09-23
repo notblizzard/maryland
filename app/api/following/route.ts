@@ -42,40 +42,38 @@ export async function POST(request: Request) {
 
   const { id } = response.data;
   const session = await getServerSession(OPTIONS);
-  if (session?.user?.email) {
-    const user = await prisma.user.findFirst({
-      where: { email: session.user.email },
+  const user = await prisma.user.findFirst({
+    where: { email: session!.user!.email! },
+  });
+  const otherUser = await prisma.user.findFirst({
+    where: { id: parseInt(id) },
+  });
+  if (user && otherUser) {
+    const follow = await prisma.follow.findFirst({
+      where: {
+        followerId: user.id,
+        followingId: otherUser.id,
+      },
     });
-    const otherUser = await prisma.user.findFirst({
-      where: { id: parseInt(id) },
-    });
-    if (user && otherUser) {
-      const follow = await prisma.follow.findFirst({
+    if (follow) {
+      await prisma.follow.delete({
         where: {
+          id: follow.id,
+        },
+      });
+      return NextResponse.json({
+        following: false,
+      });
+    } else {
+      await prisma.follow.create({
+        data: {
           followerId: user.id,
           followingId: otherUser.id,
         },
       });
-      if (follow) {
-        await prisma.follow.delete({
-          where: {
-            id: follow.id,
-          },
-        });
-        return NextResponse.json({
-          following: false,
-        });
-      } else {
-        await prisma.follow.create({
-          data: {
-            followerId: user.id,
-            followingId: otherUser.id,
-          },
-        });
-        return NextResponse.json({
-          following: true,
-        });
-      }
+      return NextResponse.json({
+        following: true,
+      });
     }
   }
 }

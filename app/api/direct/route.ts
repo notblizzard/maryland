@@ -45,68 +45,66 @@ export async function POST(request: Request) {
 
   const { username } = response.data;
 
-  if (session?.user?.email) {
-    const email = session.user.email;
+  const email = session!.user!.email!;
 
-    const user = await prisma.user.findFirst({
-      where: { email },
-    });
+  const user = await prisma.user.findFirst({
+    where: { email },
+  });
 
-    const otherUser = await prisma.user.findFirst({
-      where: { username },
-    });
-    if (user && otherUser) {
-      const direct = await prisma.direct.findFirst({
-        where: {
-          AND: [
-            {
-              members: {
-                some: {
-                  id: user.id,
-                },
+  const otherUser = await prisma.user.findFirst({
+    where: { username },
+  });
+  if (user && otherUser) {
+    const direct = await prisma.direct.findFirst({
+      where: {
+        AND: [
+          {
+            members: {
+              some: {
+                id: user.id,
               },
             },
-            {
-              members: {
-                some: {
-                  id: otherUser.id,
-                },
+          },
+          {
+            members: {
+              some: {
+                id: otherUser.id,
               },
             },
-          ],
+          },
+        ],
+      },
+    });
+    if (direct) {
+      return NextResponse.json({ error: "You're already talking to them!" });
+    } else {
+      const direct = await prisma.direct.create({
+        data: {
+          members: {
+            connect: [
+              {
+                id: user.id,
+              },
+              {
+                id: otherUser.id,
+              },
+            ],
+          },
+        },
+        include: {
+          members: true,
+          messages: {
+            include: {
+              user: true,
+            },
+          },
         },
       });
-      if (direct) {
-        return NextResponse.json({ error: "You're already talking to them!" });
-      } else {
-        const direct = await prisma.direct.create({
-          data: {
-            members: {
-              connect: [
-                {
-                  id: user.id,
-                },
-                {
-                  id: otherUser.id,
-                },
-              ],
-            },
-          },
-          include: {
-            members: true,
-            messages: {
-              include: {
-                user: true,
-              },
-            },
-          },
-        });
-        direct.members.forEach((member) => {
-          PusherServer.trigger(`direct-${member.id}`, "direct", direct);
-        });
+      direct.members.forEach((member) => {
+        PusherServer.trigger(`direct-${member.id}`, "direct", direct);
+      });
 
-        return NextResponse.json({ direct });
-      }
+      return NextResponse.json({ direct });
     }
   }
 }

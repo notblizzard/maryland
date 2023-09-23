@@ -17,54 +17,52 @@ export async function POST(request: Request) {
   const { id } = response.data;
   const session = await getServerSession(OPTIONS);
 
-  if (session?.user?.email) {
-    const post = await prisma.post.findFirst({
-      where: { id: parseInt(id) },
-      include: { user: true },
+  const post = await prisma.post.findFirst({
+    where: { id: parseInt(id) },
+    include: { user: true },
+  });
+  const user = await prisma.user.findFirst({
+    where: { email: session!.user!.email! },
+  });
+  if (post && user) {
+    const heart = await prisma.heart.findFirst({
+      where: {
+        user: {
+          id: user.id,
+        },
+        post: {
+          id: post.id,
+        },
+      },
     });
-    const user = await prisma.user.findFirst({
-      where: { email: session.user.email },
-    });
-    if (post && user) {
-      const heart = await prisma.heart.findFirst({
+    if (heart) {
+      await prisma.heart.delete({
+        where: { id: heart.id },
+      });
+      await prisma.notification.deleteMany({
         where: {
-          user: {
-            id: user.id,
-          },
-          post: {
-            id: post.id,
-          },
+          user: { id: post.user.id },
+          post: { id: post.id },
+          type: "HEART",
         },
       });
-      if (heart) {
-        await prisma.heart.delete({
-          where: { id: heart.id },
-        });
-        await prisma.notification.deleteMany({
-          where: {
-            user: { id: post.user.id },
-            post: { id: post.id },
-            type: "HEART",
-          },
-        });
-        return NextResponse.json({ hearted: false });
-      } else {
-        await prisma.heart.create({
-          data: {
-            user: { connect: { id: user.id } },
-            post: { connect: { id: post.id } },
-          },
-        });
-        await prisma.notification.create({
-          data: {
-            user: { connect: { id: post.user.id } },
-            post: { connect: { id: post.id } },
-            type: "HEART",
-          },
-        });
+      return NextResponse.json({ hearted: false });
+    } else {
+      await prisma.heart.create({
+        data: {
+          user: { connect: { id: user.id } },
+          post: { connect: { id: post.id } },
+        },
+      });
+      await prisma.notification.create({
+        data: {
+          user: { connect: { id: post.user.id } },
+          post: { connect: { id: post.id } },
+          type: "HEART",
+        },
+      });
 
-        return NextResponse.json({ hearted: true });
-      }
+      return NextResponse.json({ hearted: true });
     }
   }
 }

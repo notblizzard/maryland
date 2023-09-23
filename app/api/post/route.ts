@@ -37,21 +37,19 @@ export async function POST(request: Request) {
   const { image, description } = response.data;
 
   const session = await getServerSession(OPTIONS);
-  if (session?.user?.email) {
-    const buffer = Buffer.from(await (image as Blob).arrayBuffer());
-    const uuid = await upload(buffer, "uploads");
-    const user = await prisma.user.findFirst({
-      where: { email: session.user.email },
+  const buffer = Buffer.from(await (image as Blob).arrayBuffer());
+  const uuid = await upload(buffer, "uploads");
+  const user = await prisma.user.findFirst({
+    where: { email: session!.user!.email! },
+  });
+  if (user) {
+    const post = await prisma.post.create({
+      data: {
+        description,
+        image: uuid,
+        user: { connect: { id: user.id } },
+      },
     });
-    if (user) {
-      const post = await prisma.post.create({
-        data: {
-          description,
-          image: uuid,
-          user: { connect: { id: user.id } },
-        },
-      });
-      PusherServer.trigger(`maryland-${user.id}`, "new-post", post);
-    }
+    PusherServer.trigger(`maryland-${user.id}`, "new-post", post);
   }
 }

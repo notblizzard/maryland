@@ -1,10 +1,21 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import bg from "../public/colin-lloyd--uQK6Hrzu4k-unsplash.jpg";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 export default function Home() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session) {
+      router.push("/dashboard/feed");
+    }
+  }, [session, router]);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <Image

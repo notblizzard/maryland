@@ -20,56 +20,54 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: response.error });
   }
   const { message, id } = response.data;
-  if (session?.user?.email) {
-    const email = session.user.email;
+  const email = session!.user!.email!;
 
-    const user = await prisma.user.findFirst({
-      where: { email },
+  const user = await prisma.user.findFirst({
+    where: { email },
+  });
+  if (user) {
+    const direct = await prisma.direct.findFirst({
+      where: {
+        id: parseInt(id),
+        members: {
+          some: {
+            id: user.id,
+          },
+        },
+      },
+      include: {
+        members: true,
+      },
     });
-    if (user) {
-      const direct = await prisma.direct.findFirst({
-        where: {
-          id: parseInt(id),
-          members: {
-            some: {
+    if (direct) {
+      const directMessage = await prisma.message.create({
+        data: {
+          message,
+          direct: {
+            connect: {
+              id: direct.id,
+            },
+          },
+          user: {
+            connect: {
               id: user.id,
             },
           },
         },
         include: {
-          members: true,
+          direct: {
+            select: {
+              id: true,
+            },
+          },
+          user: true,
         },
       });
-      if (direct) {
-        const directMessage = await prisma.message.create({
-          data: {
-            message,
-            direct: {
-              connect: {
-                id: direct.id,
-              },
-            },
-            user: {
-              connect: {
-                id: user.id,
-              },
-            },
-          },
-          include: {
-            direct: {
-              select: {
-                id: true,
-              },
-            },
-            user: true,
-          },
-        });
 
-        direct.members.forEach((member) => {
-          PusherServer.trigger(`direct-${member.id}`, "message", directMessage);
-        });
-        return NextResponse.json({ ok: "ok" });
-      }
+      direct.members.forEach((member) => {
+        PusherServer.trigger(`direct-${member.id}`, "message", directMessage);
+      });
+      return NextResponse.json({ ok: "ok" });
     }
   }
 }

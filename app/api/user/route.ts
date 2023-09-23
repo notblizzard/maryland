@@ -36,30 +36,29 @@ export async function POST(request: Request) {
   const { username, description, displayname } = response.data;
 
   const session = await getServerSession(OPTIONS);
-  if (session?.user?.email) {
-    if (response.data.avatar) {
-      const { avatar } = response.data;
-      const buffer = Buffer.from(
-        avatar.replace(/^data:image\/\w+;base64,/, ""),
-        "base64",
-      );
-      const uuid = await upload(buffer, "avatars");
-      const user = await prisma.user.update({
-        where: { email: session.user.email },
-        data: { username, description, displayname, avatar: uuid },
-        include: {
-          _count: {
-            select: { posts: true, followers: true, following: true },
-          },
+  const email = session!.user!.email!;
+  if (response.data.avatar) {
+    const { avatar } = response.data;
+    const buffer = Buffer.from(
+      avatar.replace(/^data:image\/\w+;base64,/, ""),
+      "base64",
+    );
+    const uuid = await upload(buffer, "avatars");
+    const user = await prisma.user.update({
+      where: { email },
+      data: { username, description, displayname, avatar: uuid },
+      include: {
+        _count: {
+          select: { posts: true, followers: true, following: true },
         },
-      });
-      return NextResponse.json({ user });
-    } else {
-      const user = await prisma.user.update({
-        where: { email: session.user.email },
-        data: { username, description, displayname },
-      });
-      return NextResponse.json({ user });
-    }
+      },
+    });
+    return NextResponse.json({ user });
+  } else {
+    const user = await prisma.user.update({
+      where: { email },
+      data: { username, description, displayname },
+    });
+    return NextResponse.json({ user });
   }
 }

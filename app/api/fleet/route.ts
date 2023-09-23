@@ -43,25 +43,22 @@ export async function POST(request: Request) {
   }
 
   const session = await getServerSession(OPTIONS);
-  if (session?.user?.email) {
-    const data = await request.formData();
-    const { image } = response.data;
-    const buffer = Buffer.from(await (image as Blob).arrayBuffer());
-    const uuid = await upload(buffer, "uploads");
-    const user = await prisma.user.findFirst({
-      where: { email: session.user.email },
+  const { image } = response.data;
+  const buffer = Buffer.from(await (image as Blob).arrayBuffer());
+  const uuid = await upload(buffer, "uploads");
+  const user = await prisma.user.findFirst({
+    where: { email: session!.user!.email! },
+  });
+  if (user) {
+    const fleet = await prisma.fleet.create({
+      data: {
+        image: uuid,
+        user: { connect: { id: user.id } },
+      },
+      include: {
+        user: true,
+      },
     });
-    if (user) {
-      const fleet = await prisma.fleet.create({
-        data: {
-          image: uuid,
-          user: { connect: { id: user.id } },
-        },
-        include: {
-          user: true,
-        },
-      });
-      PusherServer.trigger(`maryland-${user.id}`, "new-fleet", fleet);
-    }
+    PusherServer.trigger(`maryland-${user.id}`, "new-fleet", fleet);
   }
 }
