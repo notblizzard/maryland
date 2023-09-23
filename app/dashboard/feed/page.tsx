@@ -18,7 +18,7 @@ import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { FaRegCommentAlt } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
-
+import { ScaleLoader } from "react-spinners";
 import { signOut } from "next-auth/react";
 import Settings from "../Settings";
 import { Label } from "@/components/ui/label";
@@ -137,7 +137,11 @@ export default function Dashboard() {
               dataLength={posts.length}
               next={getData}
               hasMore={hasMore}
-              loader={<div>Loading</div>}
+              loader={
+                <div className="flex w-full flex-row justify-center">
+                  <ScaleLoader color="#36d7b7" />{" "}
+                </div>
+              }
             >
               <ResponsiveMasonry
                 columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}

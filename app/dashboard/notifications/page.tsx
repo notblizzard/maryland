@@ -4,6 +4,7 @@ import NotificationCard from "@/app/utils/NotificationCard";
 import PostCard from "@/app/utils/PostCard";
 import { useCallback, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { ScaleLoader } from "react-spinners";
 
 type Notification = {
   id: number;
@@ -55,7 +56,11 @@ export default function Notifications() {
         dataLength={notifications.length}
         next={getData}
         hasMore={hasMore}
-        loader={<div>Loading</div>}
+        loader={
+          <div className="flex w-full flex-row justify-center">
+            <ScaleLoader color="#36d7b7" />{" "}
+          </div>
+        }
       >
         {notifications.map((notification) => (
           <NotificationCard

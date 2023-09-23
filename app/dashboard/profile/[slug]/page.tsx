@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import { ScaleLoader } from "react-spinners";
 
 type User = {
   id: number;
@@ -158,7 +159,11 @@ export default function ViewProfile({ params }: { params: { slug: string } }) {
             dataLength={posts.length}
             next={getData}
             hasMore={hasMore}
-            loader={<div>Loading</div>}
+            loader={
+              <div className="flex w-full flex-row justify-center">
+                <ScaleLoader color="#36d7b7" />{" "}
+              </div>
+            }
           >
             <ResponsiveMasonry
               columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}

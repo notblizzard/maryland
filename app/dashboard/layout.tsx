@@ -90,7 +90,7 @@ export default function RootLayout({
     <>
       {user && (
         <div className="grid grid-cols-12 gap-4">
-          <div className="sticky left-0 col-span-2 h-screen bg-slate-100">
+          <div className="fixed inset-0 col-span-2 h-screen w-1/6 bg-slate-100">
             <div className="flex flex-col">
               <div className="flex flex-row  p-4">
                 <Settings user={user} setUser={setUser} />
@@ -190,7 +190,7 @@ export default function RootLayout({
               </div>
             </div>
           </div>
-          <div className="col-span-10 h-full w-full">
+          <div className="col-span-10 ml-[20%] h-full w-full p-4">
             <Dialog>
               <div className="flex w-full flex-row justify-between p-4">
                 <Input
