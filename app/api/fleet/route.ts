@@ -61,6 +61,6 @@ export async function POST(request: Request) {
       user: true,
     },
   });
-  PusherServer.trigger(`maryland-${user.id}`, "new-fleet", fleet);
+  PusherServer.trigger(`feed-${user.id}`, "fleet", fleet);
   return NextResponse.json({ success: true });
 }

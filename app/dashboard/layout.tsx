@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FaPaperPlane } from "react-icons/fa";
+import PusherClient from "pusher-js";
 import {
   HiMiniSquares2X2,
   HiMagnifyingGlass,
@@ -46,6 +47,19 @@ type User = {
   };
 };
 
+type Post = {
+  id: number;
+  user: User;
+  image: string;
+  description: string;
+  createdAt: Date;
+  _count: {
+    comments: number;
+    hearts: number;
+  };
+  hearted: boolean;
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -59,6 +73,7 @@ export default function RootLayout({
   const [text, setText] = useState("");
   const pathname = usePathname();
   const { setTheme, theme } = useTheme();
+  const [user, setUser] = useState<User>(null!);
 
   const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -90,7 +105,6 @@ export default function RootLayout({
     });
   };
 
-  const [user, setUser] = useState<User>(null!);
   return (
     <>
       {user && (

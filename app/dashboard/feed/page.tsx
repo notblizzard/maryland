@@ -78,10 +78,6 @@ export default function Dashboard() {
   const [fleets, setFleets] = useState<Fleet[]>([]);
   const [skip, setSkip] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [post, setPost] = useState({
-    image: "",
-    description: "",
-  });
 
   const getData = useCallback(() => {
     fetch(`/api/dashboard?skip=${skip}`)
@@ -97,24 +93,27 @@ export default function Dashboard() {
 
   useEffect(() => {
     getData();
-    if (user && user.id) {
-      const pusher = new PusherClient(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
-        cluster: "us2",
-      });
-      const channel = pusher.subscribe(`maryland-${user.id}`);
-      channel.bind("new-post", (post: Post) => {
+  }, []);
+
+  useEffect(() => {
+    const pusher = new PusherClient(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+      cluster: "us2",
+    });
+    if (user) {
+      const channel = pusher.subscribe(`feed-${user.id}`);
+      channel.bind("post", (post: Post) => {
         setPosts([post].concat(posts));
       });
 
-      channel.bind("new-fleet", (fleet: Fleet) => {
+      channel.bind("fleet", (fleet: Fleet) => {
         setFleets([fleet].concat(fleets));
       });
 
       return () => {
-        pusher.unsubscribe(`maryland-${user.id}`);
+        pusher.unsubscribe(`feed-${user.id}`);
       };
     }
-  }, []);
+  }, [user, fleets, posts]);
 
   return (
     <>

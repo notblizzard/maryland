@@ -48,6 +48,9 @@ export async function POST(request: Request) {
   const uuid = await upload(buffer, "uploads");
   const user = await prisma.user.findFirst({
     where: { email: session!.user!.email! },
+    include: {
+      followers: true,
+    },
   });
   if (user) {
     const post = await prisma.post.create({
@@ -56,8 +59,14 @@ export async function POST(request: Request) {
         image: uuid,
         user: { connect: { id: user.id } },
       },
+      include: {
+        user: true,
+        _count: {
+          select: { hearts: true, comments: true },
+        },
+      },
     });
-    PusherServer.trigger(`maryland-${user.id}`, "new-post", post);
+    PusherServer.trigger(`feed-${user.id}`, "post", post);
     return NextResponse.json({ sucess: true });
   } else {
     return NextResponse.json({ error: true });
