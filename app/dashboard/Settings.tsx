@@ -144,10 +144,7 @@ export default function Settings({
             ) : (
               <>
                 <Avatar className="h-[100px] w-[100px] cursor-pointer">
-                  <AvatarImage
-                    src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
-                    alt={user.username}
-                  />
+                  <AvatarImage src={user.avatar} alt={user.username} />
                   <AvatarFallback></AvatarFallback>
                 </Avatar>
                 <div className="relative"></div>

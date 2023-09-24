@@ -51,10 +51,7 @@ export default function Messages({ user, direct }: MessagesProps) {
                 </p>
                 <div className="flex flex-col ">
                   <Avatar className="h-[35px] w-[35px]">
-                    <AvatarImage
-                      src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
-                      alt={user.username}
-                    />
+                    <AvatarImage src={user.avatar} alt={user.username} />
                     <AvatarFallback></AvatarFallback>
                   </Avatar>
                 </div>
@@ -72,7 +69,7 @@ export default function Messages({ user, direct }: MessagesProps) {
                 {" "}
                 <div className="flex flex-col">
                   <Image
-                    src={`https://cdn.notblizzard.dev/maryland/avatars/${message.user.avatar}.png`}
+                    src={message.user.avatar}
                     alt="Avatar"
                     className=" mr-4 rounded-full"
                     height={35}

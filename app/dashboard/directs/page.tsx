@@ -232,11 +232,11 @@ export default function MessagesPage() {
                     >
                       <Avatar className="mx-4 h-[60px] w-[60px]">
                         <AvatarImage
-                          src={`https://cdn.notblizzard.dev/maryland/avatars/${
+                          src={
                             direct.members.filter(
                               (member) => member.username !== user.username,
                             )[0].avatar
-                          }.png`}
+                          }
                           alt={user.username}
                         />
                         <AvatarFallback></AvatarFallback>
@@ -280,11 +280,11 @@ export default function MessagesPage() {
                     <div className="ml-4 mt-4 flex w-full flex-row justify-start text-black">
                       <Avatar className="mx-4 h-[60px] w-[60px]">
                         <AvatarImage
-                          src={`https://cdn.notblizzard.dev/maryland/avatars/${
+                          src={
                             direct.members.filter(
                               (member) => member.username !== user.username,
                             )[0].avatar
-                          }.png`}
+                          }
                           alt={user.username}
                         />
                         <AvatarFallback></AvatarFallback>

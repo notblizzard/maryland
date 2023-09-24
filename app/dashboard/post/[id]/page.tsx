@@ -110,7 +110,7 @@ export default function ViewPost({ params }: { params: { id: number } }) {
                 <div className="col-span-1">
                   <Avatar className="h-[40px] w-[40px]">
                     <AvatarImage
-                      src={`https://cdn.notblizzard.dev/maryland/avatars/${comment.user.avatar}.png`}
+                      src={comment.user.avatar}
                       alt={comment.user.username}
                     />
                     <AvatarFallback></AvatarFallback>

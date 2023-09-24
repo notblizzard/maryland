@@ -78,7 +78,7 @@ export default function PostCard({
     <div key={key}>
       <Link href={`/dashboard/post/${post.id}`}>
         <Image
-          src={`https://cdn.notblizzard.dev/maryland/uploads/${post.image}.png`}
+          src={post.image}
           alt={post.id.toString()}
           width={dimension || 500}
           height={dimension || 500}
@@ -91,7 +91,7 @@ export default function PostCard({
                 <Link href={`/dashboard/@${post.user.username}`}>
                   <Avatar className="h-[35px] w-[35px]">
                     <AvatarImage
-                      src={`https://cdn.notblizzard.dev/maryland/avatars/${post.user.avatar}.png`}
+                      src={post.user.avatar}
                       alt={post.user.username}
                     />
                     <AvatarFallback></AvatarFallback>

@@ -12,5 +12,5 @@ export default async function upload(image: Buffer, folder: string) {
   };
   await s3Client.send(new PutObjectCommand(bucketParams));
 
-  return uuid;
+  return `${process.env.CDN_URL}/${bucketParams.Key}`;
 }

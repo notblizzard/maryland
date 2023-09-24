@@ -102,10 +102,7 @@ export default function ViewProfile({ params }: { params: { slug: string } }) {
               <div className="col-span-3">
                 <div className="flex h-full w-full flex-col items-center justify-center">
                   <Avatar className="h-[200px] w-[200px]">
-                    <AvatarImage
-                      src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
-                      alt={user.username}
-                    />
+                    <AvatarImage src={user.avatar} alt={user.username} />
                     <AvatarFallback></AvatarFallback>
                   </Avatar>
                 </div>

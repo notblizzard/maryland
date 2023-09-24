@@ -64,7 +64,7 @@ export default function NotificationCard({
     <div key={key} className="flex w-full flex-row items-center justify-center">
       <Avatar className="h-[35px] w-[35px]">
         <AvatarImage
-          src={`https://cdn.notblizzard.dev/maryland/avatars/${notification.user.avatar}.png`}
+          src={notification.user.avatar}
           alt={notification.user.username}
         />
         <AvatarFallback></AvatarFallback>

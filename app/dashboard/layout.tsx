@@ -106,10 +106,7 @@ export default function RootLayout({
                 <div className="rainbow-border flex h-[120px] w-[120px] items-center justify-center rounded-full">
                   <div className="flex h-[115px] w-[115px] items-center justify-center rounded-full  bg-slate-100 dark:bg-slate-900">
                     <Avatar className="h-[100px] w-[100px]">
-                      <AvatarImage
-                        src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
-                        alt={user.username}
-                      />
+                      <AvatarImage src={user.avatar} alt={user.username} />
                       <AvatarFallback></AvatarFallback>
                     </Avatar>
                   </div>
@@ -255,7 +252,7 @@ export default function RootLayout({
                         onChange={(e) =>
                           setPost({ ...post, description: e.target.value })
                         }
-                        className="w-full text-black"
+                        className="w-full"
                         placeholder="Description"
                       />
                     </div>

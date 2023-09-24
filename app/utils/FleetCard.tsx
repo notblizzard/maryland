@@ -30,7 +30,7 @@ type User = {
 type Fleet = {
   id: number;
   user: User;
-  image: string | File | null | undefined;
+  image: string;
 };
 
 export default function FleetCard({
@@ -43,14 +43,13 @@ export default function FleetCard({
   dimension?: number;
 }) {
   const [fleet, setFleet] = useState<Fleet>(data);
-  const [imageWidth, setImageWidth] = useState<number>(0);
 
   return (
     <div key={key} className="m-1 flex-none">
       <Dialog>
         <DialogTrigger>
           <Image
-            src={`https://cdn.notblizzard.dev/maryland/uploads/${fleet.image}.png`}
+            src={fleet.image}
             alt={fleet.id.toString()}
             width={100}
             height={100}
@@ -59,7 +58,7 @@ export default function FleetCard({
         </DialogTrigger>
         <DialogContent>
           <Image
-            src={`https://cdn.notblizzard.dev/maryland/uploads/${fleet.image}.png`}
+            src={fleet.image}
             alt={fleet.id.toString()}
             width={1000}
             height={1000}
@@ -71,7 +70,7 @@ export default function FleetCard({
                 <Link href={`/dashboard/@${fleet.user.username}`}>
                   <Avatar className="h-[35px] w-[35px]">
                     <AvatarImage
-                      src={`https://cdn.notblizzard.dev/maryland/avatars/${fleet.user.avatar}.png`}
+                      src={fleet.user.avatar}
                       alt={fleet.user.username}
                     />
                     <AvatarFallback></AvatarFallback>
