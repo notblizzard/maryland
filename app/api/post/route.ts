@@ -13,7 +13,12 @@ export async function GET(request: Request, response: Response) {
     where: { id },
     include: {
       user: true,
-      comments: true,
+      comments: {
+        orderBy: { createdAt: "desc" },
+        include: {
+          user: true,
+        },
+      },
       _count: {
         select: { hearts: true, comments: true },
       },

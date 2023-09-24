@@ -4,14 +4,9 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
-type Comment = {
-  id: number;
-  user: User;
-  post: Post;
-  text: string;
-  createdAt: Date;
-};
 type User = {
   id: number;
   username: string;
@@ -37,20 +32,30 @@ type Post = {
     hearts: number;
   };
   hearted: boolean;
-  comments?: Comment;
+  comments?: Comment[];
+};
+
+type Comment = {
+  id: number;
+  user: User;
+  post: Post;
+  text: string;
+  createdAt: Date;
 };
 
 export default function PostCard({
   data,
   key,
   dimension,
+  date,
 }: {
   data: Post;
   key: string;
   dimension?: number;
+  date?: boolean;
 }) {
+  dayjs.extend(relativeTime);
   const [post, setPost] = useState<Post>(data);
-  const [imageWidth, setImageWidth] = useState<number>(0);
   const toggleHeart = (post: Post) => {
     fetch(`/api/heart/`, {
       body: JSON.stringify({ id: post.id }),
@@ -96,6 +101,11 @@ export default function PostCard({
             </div>
           </div>
           <div className={`flex flex-row`}>
+            {date && (
+              <p className="font-semibold text-emerald-400 dark:text-emerald-100">
+                {dayjs(post.createdAt).fromNow()}
+              </p>
+            )}
             {post.hearted ? (
               <AiFillHeart
                 className={`mx-1 h-5 w-5 text-rose-400`}
