@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { RxMoon, RxSun } from "react-icons/rx";
+import { useTheme } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -56,6 +58,7 @@ export default function RootLayout({
   const router = useRouter();
   const [text, setText] = useState("");
   const pathname = usePathname();
+  const { setTheme, theme } = useTheme();
 
   const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -92,7 +95,7 @@ export default function RootLayout({
     <>
       {user && (
         <div className="grid grid-cols-12 gap-4">
-          <div className="fixed inset-0 col-span-2 h-screen w-1/6 bg-slate-100">
+          <div className="fixed inset-0 col-span-2 h-screen w-1/6 bg-slate-100 dark:bg-slate-900">
             <div className="flex flex-col">
               <div className="flex flex-row  p-4">
                 <Settings user={user} setUser={setUser} />
@@ -101,7 +104,7 @@ export default function RootLayout({
 
               <div className="flex flex-col items-center">
                 <div className="rainbow-border flex h-[120px] w-[120px] items-center justify-center rounded-full">
-                  <div className="flex h-[115px] w-[115px] items-center justify-center rounded-full bg-slate-100">
+                  <div className="flex h-[115px] w-[115px] items-center justify-center rounded-full  bg-slate-100 dark:bg-slate-900">
                     <Avatar className="h-[100px] w-[100px]">
                       <AvatarImage
                         src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
@@ -202,12 +205,24 @@ export default function RootLayout({
                   onKeyDown={handleSubmit}
                   onChange={(e) => setText(e.target.value)}
                 />
+                <div className="flex flex-row items-center justify-end">
+                  {theme === "dark" ? (
+                    <RxSun
+                      className="mr-4 h-8 w-8"
+                      onClick={() => setTheme("light")}
+                    />
+                  ) : (
+                    <RxMoon
+                      className="mr-4 h-8 w-8"
+                      onClick={() => setTheme("dark")}
+                    />
+                  )}
 
-                <DialogTrigger className="disabled:opacity-50w-1/6 inline-flex h-9 items-end items-center justify-end justify-center rounded-md bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 px-4 py-2  text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none">
-                  New Image
-                </DialogTrigger>
+                  <DialogTrigger className="disabled:opacity-50w-1/6 inline-flex h-9 items-end items-center justify-end justify-center rounded-md bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 px-4 py-2  text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none">
+                    New Image
+                  </DialogTrigger>
+                </div>
               </div>
-
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>New Image</DialogTitle>

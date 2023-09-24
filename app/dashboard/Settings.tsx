@@ -91,7 +91,7 @@ export default function Settings({
   return (
     <Sheet>
       <SheetTrigger>
-        <HamburgerMenuIcon className="mr-4 h-4 w-4 text-black" />
+        <HamburgerMenuIcon className="mr-4 h-4 w-4" />
       </SheetTrigger>
       <SheetContent side="left">
         <div className="flex flex-col items-center justify-center">
