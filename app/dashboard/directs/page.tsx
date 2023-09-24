@@ -45,6 +45,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Direct = {
   id: number;
@@ -166,7 +167,7 @@ export default function MessagesPage() {
       {user && (
         <>
           {" "}
-          <div className="h-[80vh] px-4 text-white">
+          <div className="h-[80vh] px-4">
             <Tabs
               className="flex flex-row"
               orientation="vertical"
@@ -229,17 +230,17 @@ export default function MessagesPage() {
                       className="mx-0 mt-4 flex w-full flex-row items-center justify-start"
                       value={direct.id.toString()}
                     >
-                      <Image
-                        src={`https://cdn.notblizzard.dev/maryland/avatars/${
-                          direct.members.filter(
-                            (member) => member.username !== user.username,
-                          )[0].avatar
-                        }.png`}
-                        alt="Avatar"
-                        className="mx-4 rounded-full"
-                        height={60}
-                        width={60}
-                      />
+                      <Avatar className="mx-4 h-[60px] w-[60px]">
+                        <AvatarImage
+                          src={`https://cdn.notblizzard.dev/maryland/avatars/${
+                            direct.members.filter(
+                              (member) => member.username !== user.username,
+                            )[0].avatar
+                          }.png`}
+                          alt={user.username}
+                        />
+                        <AvatarFallback></AvatarFallback>
+                      </Avatar>
                       <div className="flex flex-col items-start justify-start">
                         <p>
                           {
@@ -277,18 +278,19 @@ export default function MessagesPage() {
                 >
                   <div className="flex h-[90vh] w-full flex-col justify-between">
                     <div className="ml-4 mt-4 flex w-full flex-row justify-start text-black">
-                      <Image
-                        src={`https://cdn.notblizzard.dev/maryland/avatars/${
-                          direct.members.filter(
-                            (member) => member.username !== user.username,
-                          )[0].avatar
-                        }.png`}
-                        alt="Avatar"
-                        className="mx-4 rounded-full"
-                        height={60}
-                        width={60}
-                      />
-                      <p className="flex flex-row items-center text-xl font-bold text-black">
+                      <Avatar className="mx-4 h-[60px] w-[60px]">
+                        <AvatarImage
+                          src={`https://cdn.notblizzard.dev/maryland/avatars/${
+                            direct.members.filter(
+                              (member) => member.username !== user.username,
+                            )[0].avatar
+                          }.png`}
+                          alt={user.username}
+                        />
+                        <AvatarFallback></AvatarFallback>
+                      </Avatar>
+
+                      <p className="flex flex-row items-center text-xl font-bold text-black dark:text-white">
                         {
                           direct.members.filter(
                             (member) => member.username !== user.username,

@@ -143,7 +143,7 @@ export default function Settings({
               </>
             ) : (
               <>
-                <Avatar className="h-[100px] w-[100px]">
+                <Avatar className="h-[100px] w-[100px] cursor-pointer">
                   <AvatarImage
                     src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
                     alt={user.username}
@@ -169,7 +169,7 @@ export default function Settings({
               id="username"
               value={user.username}
               onChange={(e) => setUser({ ...user, username: e.target.value })}
-              className="w-full text-black"
+              className="w-full "
               placeholder="Username"
             />
             {error && <p className="text-rose-500">{error}</p>}
@@ -183,7 +183,7 @@ export default function Settings({
               onChange={(e) =>
                 setUser({ ...user, displayname: e.target.value })
               }
-              className="w-full text-black"
+              className="w-full"
               placeholder="Username"
             />
           </div>
@@ -196,7 +196,7 @@ export default function Settings({
               onChange={(e) =>
                 setUser({ ...user, description: e.target.value })
               }
-              className="w-full text-black"
+              className="w-full"
               placeholder="Description"
             />
           </div>
