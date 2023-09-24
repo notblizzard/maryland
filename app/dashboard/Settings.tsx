@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useToast } from "@/components/ui/use-toast";
+import { set } from "zod";
 
 type User = {
   id: number;
@@ -44,6 +46,7 @@ export default function Settings({
   const [error, setError] = useState("");
   const [isCropperOpen, setIsCropperOpen] = useState(false);
   const cropperRef = useRef<ReactCropperElement>(null);
+  const { toast } = useToast();
 
   const onCrop = () => {
     const cropper = cropperRef.current?.cropper;
@@ -75,7 +78,12 @@ export default function Settings({
           setError(data.error);
         }
         if (data.user) {
+          setError("");
           setUser(data.user);
+          toast({
+            title: "Settings Saved",
+            description: "Your settings have been saved",
+          });
         }
       });
   };
