@@ -41,6 +41,7 @@ export default function Settings({
 }) {
   const [avatar, setAvatar] = useState("");
   const [cropper, setCropper] = useState("");
+  const [error, setError] = useState("");
   const [isCropperOpen, setIsCropperOpen] = useState(false);
   const cropperRef = useRef<ReactCropperElement>(null);
 
@@ -70,7 +71,12 @@ export default function Settings({
     })
       .then((res) => res.json())
       .then((data) => {
-        setUser(data.user);
+        if (data.error) {
+          setError(data.error);
+        }
+        if (data.user) {
+          setUser(data.user);
+        }
       });
   };
 
@@ -158,6 +164,7 @@ export default function Settings({
               className="w-full text-black"
               placeholder="Username"
             />
+            {error && <p className="text-rose-500">{error}</p>}
           </div>
           <div className="flex w-full flex-col">
             <Label htmlFor="displayname">Display Name</Label>
