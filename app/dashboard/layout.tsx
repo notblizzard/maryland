@@ -74,6 +74,7 @@ export default function RootLayout({
   const pathname = usePathname();
   const { setTheme, theme } = useTheme();
   const [user, setUser] = useState<User>(null!);
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -93,7 +94,7 @@ export default function RootLayout({
     fetch("/api/post", {
       method: "POST",
       body: form,
-    });
+    }).then(() => setOpen(false));
   };
 
   const handleNewFleetSubmit = () => {
@@ -102,7 +103,7 @@ export default function RootLayout({
     fetch("/api/fleet", {
       method: "POST",
       body: form,
-    });
+    }).then(() => setOpen(false));
   };
 
   return (
@@ -207,7 +208,7 @@ export default function RootLayout({
             </div>
           </div>
           <div className="col-span-10 ml-[20%] h-full w-full p-4">
-            <Dialog>
+            <Dialog open={open} onOpenChange={() => setOpen(!open)}>
               <div className="flex w-full flex-row justify-between p-4">
                 <Input
                   placeholder="Search"
