@@ -23,8 +23,8 @@ export async function POST(request: Request) {
   const schema = zfd.formData({
     avatar: zfd.text().optional(),
     username: zfd.text(),
-    description: zfd.text(),
-    displayname: zfd.text(),
+    description: zfd.text().optional(),
+    displayname: zfd.text().optional(),
   });
 
   const response = schema.safeParse(await request.formData());
