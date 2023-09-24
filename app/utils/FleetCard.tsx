@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type User = {
   id: number;
@@ -66,15 +67,15 @@ export default function FleetCard({
           />
           <div className="flex flex-row items-center">
             <div className="rainbow-border flex h-[50px] w-[50px] items-center justify-center rounded-full">
-              <div className="bg-background flex h-[45px] w-[45px] items-center justify-center rounded-full">
+              <div className="flex h-[45px] w-[45px] items-center justify-center rounded-full bg-background">
                 <Link href={`/dashboard/@${fleet.user.username}`}>
-                  <Image
-                    src={`https://cdn.notblizzard.dev/maryland/avatars/${fleet.user.avatar}.png`}
-                    alt={fleet.user.username}
-                    width={35}
-                    height={35}
-                    className="cursor-pointer rounded-full"
-                  />
+                  <Avatar className="h-[35px] w-[35px]">
+                    <AvatarImage
+                      src={`https://cdn.notblizzard.dev/maryland/avatars/${fleet.user.avatar}.png`}
+                      alt={fleet.user.username}
+                    />
+                    <AvatarFallback></AvatarFallback>
+                  </Avatar>
                 </Link>
               </div>
             </div>

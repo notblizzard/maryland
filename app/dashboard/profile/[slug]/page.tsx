@@ -1,6 +1,7 @@
 "use client";
 
 import PostCard from "@/app/utils/PostCard";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -100,13 +101,13 @@ export default function ViewProfile({ params }: { params: { slug: string } }) {
             <div className="grid grid-cols-12">
               <div className="col-span-3">
                 <div className="flex h-full w-full flex-col items-center justify-center">
-                  <Image
-                    src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
-                    width={200}
-                    height={200}
-                    alt={user.avatar}
-                    className="rounded-full"
-                  />
+                  <Avatar className="h-[200px] w-[200px]">
+                    <AvatarImage
+                      src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
+                      alt={user.username}
+                    />
+                    <AvatarFallback></AvatarFallback>
+                  </Avatar>
                 </div>
               </div>
               <div className="col-span-1"></div>

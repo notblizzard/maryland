@@ -1,6 +1,7 @@
 import Image from "next/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Direct = {
   id: number;
@@ -49,13 +50,13 @@ export default function Messages({ user, direct }: MessagesProps) {
                   {message.message}
                 </p>
                 <div className="flex flex-col ">
-                  <Image
-                    src={`https://cdn.notblizzard.dev/maryland/avatars/${message.user.avatar}.png`}
-                    alt="Avatar"
-                    className="ml-4 rounded-full"
-                    height={35}
-                    width={35}
-                  />
+                  <Avatar className="h-[35px] w-[35px]">
+                    <AvatarImage
+                      src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
+                      alt={user.username}
+                    />
+                    <AvatarFallback></AvatarFallback>
+                  </Avatar>
                 </div>
               </div>
               <p className="flex flex-row justify-self-end text-xs text-emerald-400 ">

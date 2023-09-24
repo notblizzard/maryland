@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
 import { type } from "os";
@@ -61,13 +62,13 @@ export default function NotificationCard({
   };
   return (
     <div key={key} className="flex w-full flex-row items-center justify-center">
-      <Image
-        src={`https://cdn.notblizzard.dev/maryland/avatars/${notification.user.avatar}.png`}
-        width={35}
-        height={35}
-        alt={notification.user.username}
-        className="rounded-full"
-      />
+      <Avatar className="h-[35px] w-[35px]">
+        <AvatarImage
+          src={`https://cdn.notblizzard.dev/maryland/avatars/${notification.user.avatar}.png`}
+          alt={notification.user.username}
+        />
+        <AvatarFallback></AvatarFallback>
+      </Avatar>
       <p>{notification.user.username}</p>{" "}
       <p>{notificationMessage(notification.type)}</p>
     </div>

@@ -16,6 +16,7 @@ import "cropperjs/dist/cropper.css";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 type User = {
   id: number;
@@ -128,13 +129,13 @@ export default function Settings({
               </>
             ) : (
               <>
-                <Image
-                  src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
-                  alt={user.username}
-                  width={100}
-                  height={100}
-                  className="m-2 cursor-pointer  rounded-full border-2 border-solid border-slate-950"
-                />
+                <Avatar className="h-[100px] w-[100px]">
+                  <AvatarImage
+                    src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
+                    alt={user.username}
+                  />
+                  <AvatarFallback></AvatarFallback>
+                </Avatar>
                 <div className="relative"></div>
               </>
             )}

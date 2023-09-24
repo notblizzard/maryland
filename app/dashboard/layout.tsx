@@ -26,6 +26,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 const inter = Inter({ subsets: ["latin"] });
 
 type User = {
@@ -100,13 +102,13 @@ export default function RootLayout({
               <div className="flex flex-col items-center">
                 <div className="rainbow-border flex h-[120px] w-[120px] items-center justify-center rounded-full">
                   <div className="flex h-[115px] w-[115px] items-center justify-center rounded-full bg-slate-100">
-                    <Image
-                      src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
-                      alt={user.username}
-                      width={100}
-                      height={100}
-                      className=" cursor-pointer  rounded-full "
-                    />
+                    <Avatar className="h-[100px] w-[100px]">
+                      <AvatarImage
+                        src={`https://cdn.notblizzard.dev/maryland/avatars/${user.avatar}.png`}
+                        alt={user.username}
+                      />
+                      <AvatarFallback></AvatarFallback>
+                    </Avatar>
                   </div>
                 </div>
                 <p className="mt-4 text-xl font-bold">{user.displayname}</p>
