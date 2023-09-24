@@ -7,17 +7,16 @@ import { zfd } from "zod-form-data";
 
 export async function GET(request: Request, response: Response) {
   const session = await getServerSession(OPTIONS);
-  if (session?.user?.email) {
-    const user = await prisma.user.findFirst({
-      where: { email: session.user.email },
-      include: {
-        _count: {
-          select: { posts: true, followers: true, following: true },
-        },
+  const email = session!.user!.email!;
+  const user = await prisma.user.findFirst({
+    where: { email },
+    include: {
+      _count: {
+        select: { posts: true, followers: true, following: true },
       },
-    });
-    return NextResponse.json({ user });
-  }
+    },
+  });
+  return NextResponse.json({ user });
 }
 
 export async function POST(request: Request) {

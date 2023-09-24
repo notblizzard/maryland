@@ -21,6 +21,8 @@ export async function GET(request: Request, response: Response) {
   });
   if (post) {
     return NextResponse.json({ post });
+  } else {
+    return NextResponse.json({ error: true });
   }
 }
 export async function POST(request: Request) {
@@ -31,7 +33,7 @@ export async function POST(request: Request) {
 
   const response = schema.safeParse(await request.formData());
   if (!response.success) {
-    return NextResponse.json({ error: response.error });
+    return NextResponse.json({ error: true });
   }
 
   const { image, description } = response.data;
@@ -51,5 +53,8 @@ export async function POST(request: Request) {
       },
     });
     PusherServer.trigger(`maryland-${user.id}`, "new-post", post);
+    return NextResponse.json({ sucess: true });
+  } else {
+    return NextResponse.json({ error: true });
   }
 }

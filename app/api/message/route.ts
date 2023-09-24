@@ -68,6 +68,10 @@ export async function POST(request: Request) {
         PusherServer.trigger(`direct-${member.id}`, "message", directMessage);
       });
       return NextResponse.json({ ok: "ok" });
+    } else {
+      return NextResponse.json({ error: true });
     }
+  } else {
+    return NextResponse.json({ error: true });
   }
 }

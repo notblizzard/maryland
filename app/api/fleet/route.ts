@@ -49,16 +49,18 @@ export async function POST(request: Request) {
   const user = await prisma.user.findFirst({
     where: { email: session!.user!.email! },
   });
-  if (user) {
-    const fleet = await prisma.fleet.create({
-      data: {
-        image: uuid,
-        user: { connect: { id: user.id } },
-      },
-      include: {
-        user: true,
-      },
-    });
-    PusherServer.trigger(`maryland-${user.id}`, "new-fleet", fleet);
+  if (!user) {
+    return NextResponse.json({ error: true });
   }
+  const fleet = await prisma.fleet.create({
+    data: {
+      image: uuid,
+      user: { connect: { id: user.id } },
+    },
+    include: {
+      user: true,
+    },
+  });
+  PusherServer.trigger(`maryland-${user.id}`, "new-fleet", fleet);
+  return NextResponse.json({ success: true });
 }

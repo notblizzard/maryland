@@ -9,26 +9,24 @@ import { z } from "zod";
 export async function GET(request: Request, response: Response) {
   const session = await getServerSession(OPTIONS);
 
-  if (session?.user?.email) {
-    const email = session.user.email;
+  const email = session!.user!.email!;
 
-    const user = await prisma.user.findFirst({
-      where: { email },
-      include: {
-        directs: {
-          include: {
-            members: true,
-            messages: {
-              include: {
-                user: true,
-              },
+  const user = await prisma.user.findFirst({
+    where: { email },
+    include: {
+      directs: {
+        include: {
+          members: true,
+          messages: {
+            include: {
+              user: true,
             },
           },
         },
       },
-    });
-    return NextResponse.json({ user });
-  }
+    },
+  });
+  return NextResponse.json({ user });
 }
 
 export async function POST(request: Request) {
@@ -106,5 +104,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({ direct });
     }
+  } else {
+    return NextResponse.json({ error: true });
   }
 }

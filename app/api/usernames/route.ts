@@ -16,5 +16,7 @@ export async function GET(request: Request, response: Response) {
     });
     const usernames = users.map((username) => username.username);
     return NextResponse.json({ usernames });
+  } else {
+    return NextResponse.json({ error: true });
   }
 }

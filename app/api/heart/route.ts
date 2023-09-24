@@ -64,5 +64,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({ hearted: true });
     }
+  } else {
+    return NextResponse.json({ error: true });
   }
 }

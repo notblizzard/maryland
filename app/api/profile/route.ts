@@ -35,6 +35,10 @@ export async function GET(request: Request, response: Response) {
       } else {
         return NextResponse.json({ user, posts });
       }
+    } else {
+      return NextResponse.json({ error: true });
     }
+  } else {
+    return NextResponse.json({ error: true });
   }
 }

@@ -9,24 +9,25 @@ export async function GET(request: Request, response: Response) {
   const session = await getServerSession(OPTIONS);
   const { searchParams } = new URL(request.url);
   const username = searchParams.get("username")!;
-  if (session?.user?.email) {
-    const user = await prisma.user.findFirst({
-      where: { email: session.user.email },
+  const email = session!.user!.email!;
+  const user = await prisma.user.findFirst({
+    where: { email },
+  });
+  const otherUser = await prisma.user.findFirst({
+    where: { username },
+  });
+  if (user && otherUser) {
+    const following = await prisma.follow.findFirst({
+      where: {
+        followerId: user.id,
+        followingId: otherUser.id,
+      },
     });
-    const otherUser = await prisma.user.findFirst({
-      where: { username },
+    return NextResponse.json({
+      following: following === null ? false : true,
     });
-    if (user && otherUser) {
-      const following = await prisma.follow.findFirst({
-        where: {
-          followerId: user.id,
-          followingId: otherUser.id,
-        },
-      });
-      return NextResponse.json({
-        following: following === null ? false : true,
-      });
-    }
+  } else {
+    return NextResponse.json({ error: true });
   }
 }
 
@@ -75,5 +76,7 @@ export async function POST(request: Request) {
         following: true,
       });
     }
+  } else {
+    return NextResponse.json({ error: true });
   }
 }
