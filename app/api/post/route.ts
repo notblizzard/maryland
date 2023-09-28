@@ -33,12 +33,12 @@ export async function GET(request: Request, response: Response) {
 export async function POST(request: Request) {
   const schema = zfd.formData({
     image: zfd.file(),
-    description: zfd.text(),
+    description: zfd.text().optional(),
   });
 
   const response = schema.safeParse(await request.formData());
   if (!response.success) {
-    return NextResponse.json({ error: true });
+    return NextResponse.json({ error: response.error });
   }
 
   const { image, description } = response.data;
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
   if (user) {
     const post = await prisma.post.create({
       data: {
-        description,
+        description: description || "",
         image: uuid,
         user: { connect: { id: user.id } },
       },

@@ -89,7 +89,9 @@ export default function RootLayout({
 
   const handleNewPostSubmit = () => {
     const form = new FormData();
-    if (post.image) form.append("image", post.image);
+    if (!post.image) return;
+    if (post.description === "") return;
+    form.append("image", post.image);
     form.append("description", post.description);
     fetch("/api/post", {
       method: "POST",
@@ -247,7 +249,6 @@ export default function RootLayout({
                       type="file"
                       name="image"
                       id="image"
-                      //value={post.image as string}
                       onChange={(e) => {
                         if (!e.target.files) return;
                         setPost({
@@ -255,6 +256,8 @@ export default function RootLayout({
                           image: e.target.files[0],
                         });
                       }}
+                      required
+                      aria-required
                     />
                     <div className="flex w-full flex-col">
                       <Label htmlFor="description" className="mb-1 mt-4">
@@ -269,6 +272,8 @@ export default function RootLayout({
                         }
                         className="w-full"
                         placeholder="Description"
+                        required
+                        aria-required
                       />
                     </div>
                     <div>

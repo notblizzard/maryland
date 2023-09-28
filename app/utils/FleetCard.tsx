@@ -33,16 +33,8 @@ type Fleet = {
   image: string;
 };
 
-export default function FleetCard({
-  data,
-  key,
-  dimension,
-}: {
-  data: Fleet;
-  key: string;
-  dimension?: number;
-}) {
-  const [fleet, setFleet] = useState<Fleet>(data);
+export default function FleetCard({ data, key }: { data: Fleet; key: string }) {
+  const fleet = data;
 
   return (
     <div key={key} className="m-1 flex-none">
