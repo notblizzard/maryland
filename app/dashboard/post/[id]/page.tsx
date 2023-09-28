@@ -28,7 +28,7 @@ type User = {
 type Post = {
   id: number;
   user: User;
-  image: string | File | null | undefined;
+  image: string;
   description: string;
   createdAt: Date;
   _count: {

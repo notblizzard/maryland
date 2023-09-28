@@ -4,9 +4,47 @@ import prisma from "@/prisma";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+export async function GET(request: Request, response: Response) {
+  const { searchParams } = new URL(request.url);
+  const session = await getServerSession(OPTIONS);
+  const skip = parseInt(searchParams.get("skip")!);
+
+  const user = await prisma.user.findFirst({
+    where: { email: session!.user!.email! },
+  });
+
+  const posts = await prisma.post.findMany({
+    where: {
+      hearts: {
+        some: {
+          userId: user!.id,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      user: true,
+      hearts: true,
+      _count: {
+        select: { hearts: true, comments: true },
+      },
+    },
+    skip: skip * 10,
+    take: 10,
+  });
+
+  if (posts.length <= 9) {
+    return NextResponse.json({ posts, noMore: true });
+  } else {
+    return NextResponse.json({ posts });
+  }
+}
+
 export async function POST(request: Request) {
   const schema = z.object({
-    id: z.string(),
+    id: z.number(),
   });
 
   const response = schema.safeParse(await request.json());
@@ -18,7 +56,7 @@ export async function POST(request: Request) {
   const session = await getServerSession(OPTIONS);
 
   const post = await prisma.post.findFirst({
-    where: { id: parseInt(id) },
+    where: { id },
     include: { user: true },
   });
   const user = await prisma.user.findFirst({

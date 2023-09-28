@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RxMoon, RxSun } from "react-icons/rx";
 import { useTheme } from "next-themes";
+import { AiFillHeart } from "react-icons/ai";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -192,6 +193,7 @@ export default function RootLayout({
                       <p className="text-lg">Notifications</p>
                     </Link>
                   </div>
+
                   <div className="mt-10">
                     <Link
                       href="/dashboard/directs"
@@ -203,6 +205,20 @@ export default function RootLayout({
                     >
                       <FaPaperPlane className="h-7 w-7" />
                       <p className="text-lg">Directs</p>
+                    </Link>
+                  </div>
+
+                  <div className="mt-10">
+                    <Link
+                      href="/dashboard/hearts"
+                      className={`flex flex-row ${
+                        pathname === "/dashboard/hearts"
+                          ? "text-rose-400"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      <AiFillHeart className="h-7 w-7" />
+                      <p className="text-lg">Hearts</p>
                     </Link>
                   </div>
                 </div>

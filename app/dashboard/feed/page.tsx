@@ -25,6 +25,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import PostCard from "@/app/utils/PostCard";
 import FleetCard from "@/app/utils/FleetCard";
+import Link from "next/link";
 
 type User = {
   id: number;
@@ -43,7 +44,7 @@ type User = {
 type Post = {
   id: number;
   user: User;
-  image: string | File | null | undefined;
+  image: string;
   description: string;
   createdAt: Date;
   _count: {
@@ -89,7 +90,7 @@ export default function Dashboard() {
         setSkip(skip + 1);
         if (data.noMore) setHasMore(false);
       });
-  }, [skip]);
+  }, [skip, posts]);
 
   useEffect(() => {
     getData();
@@ -147,7 +148,9 @@ export default function Dashboard() {
               >
                 <Masonry gutter={"1rem"} className="pr-4">
                   {posts.map((post) => (
-                    <PostCard data={post} key={post.id.toString()} />
+                    <Link href={`/post/${post.id}`} key={post.id.toString()}>
+                      <PostCard data={post} key={post.id.toString()} />
+                    </Link>
                   ))}
                 </Masonry>
               </ResponsiveMasonry>

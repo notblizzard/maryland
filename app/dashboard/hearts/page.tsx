@@ -1,8 +1,7 @@
 "use client";
 import PostCard from "@/app/utils/PostCard";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { ScaleLoader } from "react-spinners";
@@ -34,22 +33,20 @@ type Post = {
   hearted: boolean;
 };
 
-export default function Search() {
-  const searchParams = useSearchParams();
+export default function Hearts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [skip, setSkip] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const search = searchParams.get("params")!;
 
   const getData = useCallback(() => {
-    fetch(`/api/search?params=${search}&skip=${skip}`)
+    fetch(`/api/heart?skip=${skip}`)
       .then((res) => res.json())
       .then((data) => {
         setPosts(posts.concat(data.posts));
         setSkip(skip + 1);
         if (data.noMore) setHasMore(false);
       });
-  }, [skip, posts, search]);
+  }, [skip, posts]);
 
   useEffect(() => {
     getData();
@@ -57,7 +54,7 @@ export default function Search() {
 
   return (
     <>
-      <p>Search</p>
+      <p>Hearts</p>
 
       <InfiniteScroll
         dataLength={posts.length}

@@ -1,5 +1,6 @@
 "use client";
 import PostCard from "@/app/utils/PostCard";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
@@ -22,7 +23,7 @@ type User = {
 type Post = {
   id: number;
   user: User;
-  image: string | File | null | undefined;
+  image: string;
   description: string;
   createdAt: Date;
   _count: {
@@ -45,7 +46,7 @@ export default function Explore() {
         setSkip(skip + 1);
         if (data.noMore) setHasMore(false);
       });
-  }, [skip]);
+  }, [skip, posts]);
 
   useEffect(() => {
     getData();
@@ -68,7 +69,9 @@ export default function Explore() {
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
           <Masonry gutter={"1rem"} className="pr-4">
             {posts.map((post) => (
-              <PostCard data={post} key={post.id.toString()} />
+              <Link href={`/post/${post.id}`} key={post.id.toString()}>
+                <PostCard data={post} key={post.id.toString()} />
+              </Link>
             ))}
           </Masonry>
         </ResponsiveMasonry>

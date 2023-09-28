@@ -26,7 +26,7 @@ type User = {
 type Post = {
   id: number;
   user: User;
-  image: string | File | null | undefined;
+  image: string;
   description: string;
   createdAt: Date;
 };
@@ -43,7 +43,7 @@ export default function Notifications() {
         setSkip(skip + 1);
         if (data.noMore) setHasMore(false);
       });
-  }, [skip]);
+  }, [skip, notifications]);
 
   useEffect(() => {
     getData();

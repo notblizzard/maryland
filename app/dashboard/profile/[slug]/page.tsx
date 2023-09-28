@@ -28,7 +28,7 @@ type User = {
 type Post = {
   id: number;
   user: User;
-  image: string | File | null | undefined;
+  image: string;
   description: string;
   createdAt: Date;
   _count: {
@@ -71,7 +71,7 @@ export default function ViewProfile({ params }: { params: { slug: string } }) {
         setSkip(skip + 1);
         if (data.noMore) setHasMore(false);
       });
-  }, [skip]);
+  }, [skip, posts, params.slug]);
 
   useEffect(() => {
     if (session?.user) {
@@ -168,7 +168,9 @@ export default function ViewProfile({ params }: { params: { slug: string } }) {
             >
               <Masonry gutter={"1rem"} className="pr-4">
                 {posts.map((post) => (
-                  <PostCard data={post} key={post.id.toString()} />
+                  <Link href={`/post/${post.id}`} key={post.id.toString()}>
+                    <PostCard data={post} key={post.id.toString()} />
+                  </Link>
                 ))}
               </Masonry>
             </ResponsiveMasonry>
