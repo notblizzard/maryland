@@ -32,12 +32,12 @@ export async function GET(request: Request, response: Response) {
       user: true,
     },
   });
-  fleets.forEach((fleet) => {
+  fleets.forEach(async (fleet) => {
     const now = dayjs(Date.now());
     const then = dayjs(fleet.createdAt);
     const diff = now.diff(then, "hour");
     if (diff > 24) {
-      prisma.fleet.delete({
+      await prisma.fleet.delete({
         where: { id: fleet.id },
       });
     }
